@@ -837,8 +837,8 @@ body {
     
     .modal-container {
         width: 90%;
-        height: 95vh;
-        max-height: 95vh;
+        height: 80vh;
+        max-height: 80vh;
         border-radius: 15px;
     }
     
