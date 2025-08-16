@@ -227,7 +227,8 @@ body {
 .modal-container {
     width: 90%;
     max-width: 1000px;
-    height: auto;
+    height: 90vh;
+    max-height: 800px;
     background: white;
     border-radius: 20px;
     overflow: hidden;
@@ -283,6 +284,25 @@ body {
     background: white;
     position: relative;
     overflow-y: auto;
+    max-height: 100%;
+}
+
+.modal-right::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-right::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.modal-right::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+.modal-right::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
 }
 
 .modal-close {
@@ -747,7 +767,8 @@ body {
     
     .modal-container {
         width: 85%;
-        height: auto;
+        height: 90vh;
+        max-height: 90vh;
         flex-direction: column;
     }
     
@@ -757,6 +778,7 @@ body {
     
     .modal-right {
         padding: 30px 20px;
+        max-height: 100%;
     }
     
     .form-header h2 {
@@ -815,12 +837,14 @@ body {
     
     .modal-container {
         width: 90%;
-        height: auto;
+        height: 95vh;
+        max-height: 95vh;
         border-radius: 15px;
     }
     
     .modal-right {
         padding: 25px 15px;
+        max-height: 100%;
     }
     
     .form-header h2 {
