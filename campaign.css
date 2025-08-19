@@ -523,13 +523,13 @@ body {
 
 .skip-btn {
     background: transparent;
-    color: #666;
+    color: #ffffff;
     border: 2px solid #666;
     transition: all 0.3s ease;
 }
 
 .skip-btn:hover {
-    background: #666;
+    background: #338f428a;
     color: white;
     transform: translateY(-2px);
     box-shadow: 0 4px 15px rgba(102, 102, 102, 0.3);
