@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fundr</title>
+    <title>CrowdFundr</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
 </head>
@@ -19,7 +19,7 @@
             <a href="aboutus.html">About Us</a>
         </nav>
         <div class="header-cta">
-            <a href="#" class="btn-primary">Create Campaign</a>
+            <a href="campaign.html" class="btn-primary">Create Campaign</a>
         </div>
         <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
             <span></span>
@@ -29,271 +29,25 @@
     </header>
 
     <main>
-        <section class="hero-background">
+    <section class="hero-background">
             <div data-us-project="MnP8IFVAxjqLEstuB9s8"></div>
-            <script type="text/javascript">!function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();</script>
-            
-            <div class="hero-content">
-                <h1 class="hero-headline">Turn Your Idea Into Reality</h1>
-                <p class="hero-subheadline">Create your campaign in minutes and share it with the world.</p>
-                <div class="hero-buttons">
-                    <a href="#" class="btn-primary" id="createCampaignBtn">Create Campaign</a>
+        <script type="text/javascript">!function(){if(!window.UnicornStudio){window.UnicornStudio={isInitialized:!1};var i=document.createElement("script");i.src="https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v1.4.29/dist/unicornStudio.umd.js",i.onload=function(){window.UnicornStudio.isInitialized||(UnicornStudio.init(),window.UnicornStudio.isInitialized=!0)},(document.head || document.body).appendChild(i)}}();</script>
+        
+        <div class="hero-content">
+            <h1 class="hero-headline">Turn Your Ideas Into Reality</h1>
+            <p class="hero-subheadline">Create your campaign in minutes and share it with the world.</p>
+            <div class="hero-buttons">
+                    <a href="campaign.html" class="btn-primary" id="createCampaignBtn">Create Campaign</a>
                     <a href="howitworks.html" class="btn-secondary">See How It Works</a>
-                </div>
             </div>
-        </section>
+        </div>
+    </section>
     </main>
     
     <div class="watermark-cover"></div>
 
-    <div class="modal-overlay" id="modalOverlay" aria-hidden="true">
-        <div class="modal-container">
-            <div class="modal-left">
-                <div class="modal-image">
-                    <img src="img1.png" alt="Campaign Background">
-                    <div class="image-overlay"></div>
-                    <div class="tagline">
-                        <h2>Ideas Made Real</h2>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-right">
-                <button class="modal-close" id="modalClose" aria-label="Close modal">&times;</button>
-                <div class="form-header">
-                    <h2>Create Campaign</h2>
-                    <div class="step-indicator">
-                        <span id="stepText">Step 1 of 6</span>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="progressFill"></div>
-                        </div>
-                    </div>
-                </div>
-                
-                <form class="campaign-form" id="campaignForm">
-                    <div class="form-step active" data-step="1">
-                        <h3>Campaign Basics</h3>
-                        <div class="form-group">
-                            <label for="campaignTitle">Campaign Title</label>
-                            <input type="text" id="campaignTitle" name="campaignTitle" placeholder="Enter campaign title" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="shortTagline">Short Tagline</label>
-                            <input type="text" id="shortTagline" name="shortTagline" placeholder="Enter short tagline" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="campaignCategory">Category</label>
-                            <select id="campaignCategory" name="campaignCategory" required>
-                                <option value="">Select category</option>
-                                <option value="technology">Technology</option>
-                                <option value="art">Art</option>
-                                <option value="music">Music</option>
-                                <option value="film">Film</option>
-                                <option value="business">Business</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="location">Location</label>
-                            <input type="text" id="location" name="location" placeholder="Enter location" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="coverUpload">Cover Upload</label>
-                            <div class="upload-area" id="uploadArea">
-                                <input type="file" id="coverUpload" name="coverUpload" accept="image/*" style="display: none;">
-                                <div class="upload-content">
-                                    <span>📁</span>
-                                    <p>Click to upload or drag & drop</p>
-                                    <small>PNG, JPG up to 10MB</small>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="form-step" data-step="2">
-                        <h3>Funding Goal</h3>
-                        <div class="form-group">
-                            <label for="targetAmount">Target Amount</label>
-                            <div class="amount-input">
-                                <input type="number" id="targetAmount" name="targetAmount" placeholder="0" required>
-                                <select id="currency" name="currency">
-                                    <option value="USD">USD</option>
-                                    <option value="EUR">EUR</option>
-                                    <option value="GBP">GBP</option>
-                                    <option value="ETH">ETH</option>
-                                    <option value="BTC">BTC</option>
-                                    <option value="USDC">USDC</option>
-                                    <option value="USDT">USDT</option>
-                                    <option value="DAI">DAI</option>
-                                    <option value="MATIC">MATIC</option>
-                                    <option value="SOL">SOL</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="minContribution">Min Contribution</label>
-                            <input type="number" id="minContribution" name="minContribution" placeholder="0" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="deadline">Deadline</label>
-                            <input type="date" id="deadline" name="deadline" required>
-                        </div>
-                        <div class="form-group">
-                            <label>Funding Type</label>
-                            <div class="radio-group">
-                                <label class="radio-option">
-                                    <input type="radio" name="fundingType" value="fixed" required>
-                                    <span>Fixed Goal</span>
-                                </label>
-                                <label class="radio-option">
-                                    <input type="radio" name="fundingType" value="flexible" required>
-                                    <span>Flexible Goal</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
 
-                    <div class="form-step" data-step="3">
-                        <h3>Rewards</h3>
-                        <div class="rewards-container" id="rewardsContainer">
-                            <div class="reward-item" data-reward="1">
-                                <h4>Reward Details</h4>
-                                <div class="form-group">
-                                    <label>Reward Title</label>
-                                    <input type="text" name="rewardTitle" placeholder="Enter reward title">
-                                </div>
-                                <div class="form-group">
-                                    <label>Description</label>
-                                    <textarea name="rewardDescription" placeholder="Describe the reward" rows="3"></textarea>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group">
-                                        <label>Contribution</label>
-                                        <input type="number" name="rewardContribution" placeholder="0">
-                                    </div>
-                                    <div class="form-group">
-                                        <label>Quantity Limit</label>
-                                        <input type="number" name="rewardQuantity" placeholder="Unlimited">
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label>Delivery Date</label>
-                                    <input type="date" name="rewardDelivery">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-step" data-step="4">
-                        <h3>Story & Company Profile</h3>
-                        <div class="form-group">
-                            <label for="fullStory">Full Story</label>
-                            <textarea id="fullStory" name="fullStory" placeholder="Tell your story..." rows="6" required></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label>Gallery</label>
-                            <div class="gallery-upload" id="galleryUpload">
-                                <input type="file" id="galleryFiles" name="galleryFiles[]" multiple accept="image/*,video/*" style="display: none;">
-                                <div class="upload-content">
-                                    <span>🖼️</span>
-                                    <p>+ Add Images/Videos</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="company-profile" id="companyProfile">
-                            <h4>Company Profile</h4>
-                            <div class="form-group">
-                                <label for="companyName">Company Name</label>
-                                <input type="text" id="companyName" name="companyName" placeholder="Enter company name">
-                            </div>
-                            <div class="form-group">
-                                <label for="companyWebsite">Website</label>
-                                <input type="url" id="companyWebsite" name="companyWebsite" placeholder="https://company.com">
-                            </div>
-                            <div class="form-group">
-                                <label for="companyIndustry">Industry</label>
-                                <select id="companyIndustry" name="companyIndustry">
-                                    <option value="">Select industry</option>
-                                    <option value="technology">Technology</option>
-                                    <option value="healthcare">Healthcare</option>
-                                    <option value="finance">Finance</option>
-                                    <option value="education">Education</option>
-                                    <option value="retail">Retail</option>
-                                    <option value="manufacturing">Manufacturing</option>
-                                    <option value="other">Other</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="companyLocation">Company Location</label>
-                                <input type="text" id="companyLocation" name="companyLocation" placeholder="City, Country">
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-step" data-step="5">
-                        <h3>Wallet & Payment Setup</h3>
-                        <div class="form-group">
-                            <label for="walletAddress">Wallet Address</label>
-                            <input type="text" id="walletAddress" name="walletAddress" placeholder="0x..." required>
-                        </div>
-                        <div class="form-group">
-                            <label for="preferredToken">Preferred Token</label>
-                            <select id="preferredToken" name="preferredToken" required>
-                                <option value="">Select token</option>
-                                <option value="ETH">Ethereum (ETH)</option>
-                                <option value="USDC">USDC</option>
-                                <option value="USDT">USDT</option>
-                                <option value="DAI">DAI</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="payoutWallet">Payout Wallet (Optional)</label>
-                            <input type="text" id="payoutWallet" name="payoutWallet" placeholder="0x...">
-                        </div>
-                    </div>
-
-                    <div class="form-step" data-step="6">
-                        <h3>Review & Publish</h3>
-                        <div class="summary-panel">
-                            <h4>Campaign Summary</h4>
-                            <div class="summary-item">
-                                <span class="summary-label">Campaign Title:</span>
-                                <span class="summary-value" id="summaryTitle">-</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Goal:</span>
-                                <span class="summary-value" id="summaryGoal">-</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Deadline:</span>
-                                <span class="summary-value" id="summaryDeadline">-</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Company Profile:</span>
-                                <span class="summary-value" id="summaryRewards">-</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Wallet:</span>
-                                <span class="summary-value" id="summaryWallet">-</span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label class="checkbox-option">
-                                <input type="checkbox" id="confirmInfo" name="confirmInfo" required>
-                                <span>Confirm info is correct</span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="form-navigation">
-                        <button type="button" class="btn-secondary" id="prevBtn">Previous</button>
-                        <button type="button" class="btn-primary" id="nextBtn">Next</button>
-                        <button type="submit" class="btn-primary" id="publishBtn" style="display: none;">Publish Campaign</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
+    <script src="nav.js"></script>
 </body>
 </html>

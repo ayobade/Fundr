@@ -1,9 +1,5 @@
 document.addEventListener('DOMContentLoaded', function() {
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    const headerNav = document.querySelector('.header-nav');
-    const createCampaignBtn = document.getElementById('createCampaignBtn');
-    const modalOverlay = document.getElementById('modalOverlay');
-    const modalClose = document.getElementById('modalClose');
+    const backToHome = document.getElementById('backToHome');
     const nextBtn = document.getElementById('nextBtn');
     const prevBtn = document.getElementById('prevBtn');
     const publishBtn = document.getElementById('publishBtn');
@@ -20,20 +16,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (!nextBtn || !prevBtn || !publishBtn) return;
     
-    function closeModal() {
-        modalOverlay.classList.remove('active');
-        document.body.style.overflow = 'auto';
-        resetForm();
-    }
-    
-    function toggleMobileMenu() {
-        mobileMenuToggle.classList.toggle('active');
-        headerNav.classList.toggle('active');
-    }
-    
-    function closeMobileMenu() {
-        mobileMenuToggle.classList.remove('active');
-        headerNav.classList.remove('active');
+    if (backToHome) {
+        backToHome.addEventListener('click', function(e) {
+            e.preventDefault();
+            window.location.href = 'index.html';
+        });
     }
     
     function updateStep() {
@@ -87,7 +74,7 @@ document.addEventListener('DOMContentLoaded', function() {
         let isValid = true;
         requiredFields.forEach(field => {
             const hasValue = field.value.trim();
-            field.style.borderColor = hasValue ? '#e0e0e0' : '#ff4444';
+            field.style.borderColor = hasValue ? '#444' : '#ff4444';
             if (!hasValue) isValid = false;
         });
         
@@ -126,45 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
         updateStep();
     }
     
-    mobileMenuToggle.addEventListener('click', toggleMobileMenu);
-    
-    document.addEventListener('click', event => {
-        if (!mobileMenuToggle.contains(event.target) && !headerNav.contains(event.target)) {
-            closeMobileMenu();
-        }
-    });
-    
-    window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) closeMobileMenu();
-    });
-    
-    createCampaignBtn.addEventListener('click', e => {
-        e.preventDefault();
-        modalOverlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        resetForm();
-    });
-    
-    const headerCreateBtn = document.querySelector('.header-cta .btn-primary');
-    if (headerCreateBtn) {
-        headerCreateBtn.addEventListener('click', e => {
-            e.preventDefault();
-            modalOverlay.classList.add('active');
-            document.body.style.overflow = 'hidden';
-            resetForm();
-        });
-    }
-    
-    modalClose.addEventListener('click', closeModal);
-    
-    modalOverlay.addEventListener('click', e => {
-        if (e.target === modalOverlay) closeModal();
-    });
-    
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
-    });
-    
     nextBtn.addEventListener('click', () => {
         if (validateCurrentStep() && currentStep < totalSteps) {
             currentStep++;
@@ -179,14 +127,20 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    uploadArea.addEventListener('click', () => coverUpload.click());
-    galleryUpload.addEventListener('click', () => galleryFiles.click());
+    if (uploadArea && coverUpload) {
+        uploadArea.addEventListener('click', () => coverUpload.click());
+    }
+    
+    if (galleryUpload && galleryFiles) {
+        galleryUpload.addEventListener('click', () => galleryFiles.click());
+    }
     
     campaignForm.addEventListener('submit', e => {
         e.preventDefault();
-        if (document.getElementById('confirmInfo').checked) {
+        const confirmCheckbox = document.getElementById('confirmInfo');
+        if (confirmCheckbox && confirmCheckbox.checked) {
             alert('Campaign published successfully!');
-            closeModal();
+            window.location.href = 'index.html';
         } else {
             alert('Please confirm that all information is correct before publishing.');
         }

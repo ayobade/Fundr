@@ -9,206 +9,159 @@ body {
     overflow-x: hidden;
 }
 
-.header {
+.campaign-page {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    padding: 1rem 2rem;
-    background: rgba(20, 20, 20, 0.35);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    height: 100%;
+    background: rgba(255, 255, 255, 0.8);
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    z-index: 1000;
-    box-shadow: 0 2px 20px rgba(0, 0, 0, 0.3);
+    z-index: 10000;
+    backdrop-filter: blur(5px);
 }
 
-.header-logo h1 {
-    font-size: 2rem;
-    font-weight: bold;
-    color: #fff;
-}
-
-.header-nav {
+.campaign-layout {
+    width: 100vw;
+    height: 100vh;
+    background: white;
+    border-radius: 0;
+    overflow: hidden;
+    box-shadow: none;
     display: flex;
-    gap: 2rem;
-    align-items: center;
-}
-
-.header-nav a {
-    text-decoration: none;
-    color: #cccccc;
-    font-weight: 500;
-    transition: color 0.3s ease;
     position: relative;
 }
 
-.header-nav a:hover {
-    color: #338f42;
+.campaign-sidebar {
+    width: 40vw;
+    position: relative;
+    overflow: hidden;
 }
 
-.header-nav a::after {
-    content: '';
-    position: absolute;
-    bottom: -5px;
-    left: 0;
-    width: 0;
-    height: 2px;
-    background: #338f42;
-    transition: width 0.3s ease;
-}
-
-.header-nav a:hover::after {
+.campaign-image {
     width: 100%;
+    height: 100%;
+    position: relative;
 }
 
-.header-cta a {
-    background: linear-gradient(135deg, #338f42, #2d7a3a);
-    color: white;
-    padding: 1rem 2rem;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 400;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 20px rgba(51, 143, 66, 0.4);
-    border: none;
-    cursor: pointer;
-    display: inline-block;
-    min-width: 180px;
-    text-align: center;
+.campaign-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
-.header-cta a:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(51, 143, 66, 0.5);
-}
-
-.mobile-menu-toggle {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0.5rem;
-}
-
-.mobile-menu-toggle span {
-    width: 25px;
-    height: 3px;
-    background: #fff;
-    margin: 3px 0;
-    transition: 0.3s;
-    border-radius: 2px;
-}
-
-.hero-background {
-    position: fixed;
+.image-overlay {
+    position: absolute;
     top: 0;
     left: 0;
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: -1;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.3));
 }
 
-.hero-background div[data-us-project] {
-    width: 100% !important;
-    height: 100% !important;
-    max-width: 100vw;
-    max-height: 100vh;
-}
-
-.hero-content {
+.tagline {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    z-index: 10;
-    max-width: 800px;
-    padding: 2rem;
+    bottom: 40px;
+    left: 40px;
+    color: white;
 }
 
-.hero-headline {
-    font-size: 4rem;
-    font-weight: bold;
-    color: #ffffff;
-    margin-bottom: 1.5rem;
-    line-height: 1.2;
+.tagline h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 2.5rem;
+    font-weight: 700;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
 }
 
-.hero-subheadline {
-    font-size: 1.2rem;
-    color: #f0f0f0;
-    margin-bottom: 3rem;
-    line-height: 1.6;
-    text-shadow: 0 1px 5px rgba(0, 0, 0, 0.5);
-}
-
-.hero-buttons {
+.campaign-content {
+    width: 60vw;
+    padding: 0;
+    background: #0a0a0a;
+    position: relative;
+    overflow-y: auto;
+    max-height: 100%;
     display: flex;
-    gap: 1.5rem;
     justify-content: center;
-    flex-wrap: wrap;
+    align-items: flex-start;
 }
 
-.btn-primary, .btn-secondary {
-    padding: 1rem 2rem;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: 400;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    display: inline-block;
-    min-width: 180px;
-    text-align: center;
+.campaign-form-container {
+    width: 100%;
+    max-width: 560px;
+    padding: 40px;
+    overflow-y: auto;
+    max-height: 100vh;
 }
 
-.btn-primary {
-    background: linear-gradient(135deg, #338f42, #2d7a3a);
-    color: white;
-    box-shadow: 0 4px 20px rgba(51, 143, 66, 0.4);
-    border: none;
+.campaign-form-container::-webkit-scrollbar {
+    width: 8px;
 }
 
-.btn-primary:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(51, 143, 66, 0.5);
+.campaign-form-container::-webkit-scrollbar-track {
+    background: #333;
+    border-radius: 4px;
 }
 
-.btn-secondary {
-    background: transparent;
-    color: #ffffff;
-    border: 2px solid #ffffff;
+.campaign-form-container::-webkit-scrollbar-thumb {
+    background: #666;
+    border-radius: 4px;
 }
 
-.btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.1);
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(255, 255, 255, 0.2);
+.campaign-form-container::-webkit-scrollbar-thumb:hover {
+    background: #888;
 }
 
-.watermark-cover {
+.campaign-header {
     position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100vw;
-    height: 70px;
-    background: rgb(0, 0, 0);
-    z-index: 9999;
+    top: 0;
+    left: 40vw;
+    right: 0;
+    height: 80px;
+    background: #0a0a0a;
+    z-index: 1001;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
 }
 
+.back-to-home {
+    position: relative;
+    background: rgba(51, 143, 66, 0.1);
+    border: 2px solid #338f42;
+    border-radius: 8px;
+    color: #338f42;
+    cursor: pointer;
+    padding: 8px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 500;
+}
 
+.back-to-home:hover {
+    background: #338f42;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(51, 143, 66, 0.3);
+}
+
+.back-arrow {
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.back-text {
+    white-space: nowrap;
+}
 
 .form-header {
+    margin-top: 100px;
     margin-bottom: 30px;
 }
 
@@ -216,7 +169,7 @@ body {
     font-family: 'Orbitron', sans-serif;
     font-size: 2rem;
     font-weight: 700;
-    color: #333;
+    color: #fff;
     margin-bottom: 20px;
 }
 
@@ -229,14 +182,14 @@ body {
 .step-indicator span {
     font-family: 'Roboto', sans-serif;
     font-size: 0.9rem;
-    color: #666;
+    color: #ccc;
     font-weight: 500;
 }
 
 .progress-bar {
     width: 100%;
     height: 4px;
-    background: #e0e0e0;
+    background: #444;
     border-radius: 2px;
     overflow: hidden;
 }
@@ -261,9 +214,9 @@ body {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #333;
+    color: #fff;
     margin-bottom: 25px;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid #444;
     padding-bottom: 10px;
 }
 
@@ -284,7 +237,7 @@ body {
     font-family: 'Roboto', sans-serif;
     font-size: 0.9rem;
     font-weight: 500;
-    color: #333;
+    color: #fff;
 }
 
 .form-group input,
@@ -293,9 +246,10 @@ body {
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
     padding: 12px 16px;
-    border: 2px solid #e0e0e0;
+    border: 2px solid #444;
     border-radius: 8px;
-    background: white;
+    background: #333;
+    color: #fff;
     transition: all 0.3s ease;
 }
 
@@ -341,6 +295,7 @@ body {
     align-items: center;
     gap: 8px;
     cursor: pointer;
+    color: #fff;
 }
 
 .radio-option input[type="radio"] {
@@ -351,19 +306,19 @@ body {
 
 .upload-area,
 .gallery-upload {
-    border: 2px dashed #e0e0e0;
+    border: 2px dashed #666;
     border-radius: 8px;
     padding: 30px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    background: #fafafa;
+    background: #333;
 }
 
 .upload-area:hover,
 .gallery-upload:hover {
     border-color: #338f42;
-    background: #f0f8f0;
+    background: #444;
 }
 
 .upload-content span {
@@ -375,14 +330,14 @@ body {
 .upload-content p {
     font-family: 'Roboto', sans-serif;
     font-size: 1rem;
-    color: #333;
+    color: #fff;
     margin-bottom: 5px;
 }
 
 .upload-content small {
     font-family: 'Roboto', sans-serif;
     font-size: 0.8rem;
-    color: #666;
+    color: #ccc;
 }
 
 .rewards-container {
@@ -392,25 +347,25 @@ body {
 }
 
 .reward-item {
-    border: 1px solid #e0e0e0;
+    border: 1px solid #555;
     border-radius: 8px;
     padding: 20px;
-    background: #fafafa;
+    background: #333;
 }
 
 .reward-item h4 {
     font-family: 'Roboto', sans-serif;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #333;
+    color: #fff;
     margin-bottom: 15px;
 }
 
 .company-profile {
-    border: 1px solid #e0e0e0;
+    border: 1px solid #555;
     border-radius: 8px;
     padding: 20px;
-    background: #fafafa;
+    background: #333;
     margin-top: 20px;
 }
 
@@ -418,14 +373,15 @@ body {
     font-family: 'Roboto', sans-serif;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #333;
+    color: #fff;
     margin-bottom: 20px;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #555;
     padding-bottom: 10px;
 }
 
 .summary-panel {
-    background: #f8f9fa;
+    background: #333;
+    border: 1px solid #555;
     border-radius: 8px;
     padding: 20px;
     margin-bottom: 20px;
@@ -435,7 +391,7 @@ body {
     font-family: 'Orbitron', sans-serif;
     font-size: 1.2rem;
     font-weight: 600;
-    color: #333;
+    color: #fff;
     margin-bottom: 15px;
 }
 
@@ -443,7 +399,7 @@ body {
     display: flex;
     justify-content: space-between;
     padding: 8px 0;
-    border-bottom: 1px solid #e0e0e0;
+    border-bottom: 1px solid #555;
 }
 
 .summary-item:last-child {
@@ -453,13 +409,13 @@ body {
 .summary-label {
     font-family: 'Roboto', sans-serif;
     font-weight: 500;
-    color: #666;
+    color: #ccc;
 }
 
 .summary-value {
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
-    color: #333;
+    color: #fff;
 }
 
 .checkbox-option {
@@ -467,6 +423,7 @@ body {
     align-items: center;
     gap: 10px;
     cursor: pointer;
+    color: #fff;
 }
 
 .checkbox-option input[type="checkbox"] {
@@ -497,6 +454,31 @@ body {
 .form-navigation button:disabled {
     opacity: 0.5;
     cursor: not-allowed;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #338f42, #2d7a3a);
+    color: white;
+    box-shadow: 0 4px 20px rgba(51, 143, 66, 0.4);
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(51, 143, 66, 0.5);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: #338f42;
+    border: 2px solid #338f42;
+}
+
+.btn-secondary:hover {
+    background: #338f42;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(51, 143, 66, 0.3);
 }
 
 .form-navigation #prevBtn.btn-secondary {
@@ -554,98 +536,38 @@ body {
 }
 
 @media (max-width: 768px) {
-    .header {
-        padding: 1rem;
-    }
-    
-    .header-logo h1 {
-        font-size: 1.5rem;
-    }
-    
-    .header-nav {
-        position: fixed;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: rgba(20, 20, 20, 0.95);
-        backdrop-filter: blur(15px);
+    .campaign-layout {
         flex-direction: column;
-        gap: 0.5rem;
-        padding: 1rem;
-        transform: translateY(-100%);
-        opacity: 0;
-        visibility: hidden;
-        transition: all 0.3s ease;
-        border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    .header-nav.active {
-        transform: translateY(0);
-        opacity: 1;
-        visibility: visible;
-    }
-    
-    .header-nav a {
-        padding: 0.7rem 0;
-        width: 100%;
-        text-align: center;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .header-nav a:last-child {
-        border-bottom: none;
-    }
-    
-    .header-cta {
+    .campaign-sidebar {
         display: none;
+        width: auto;
     }
     
-    .mobile-menu-toggle {
-        display: flex;
+    .campaign-content {
+        width: 100vw;
     }
     
-    .mobile-menu-toggle.active span:nth-child(1) {
-        transform: rotate(-45deg) translate(-5px, 6px);
+    .campaign-form-container {
+        padding: 30px 20px;
+        max-height: 100%;
     }
     
-    .mobile-menu-toggle.active span:nth-child(2) {
-        opacity: 0;
+    .campaign-header {
+        left: 0;
+        height: 70px;
+        padding-left: 15px;
     }
     
-    .mobile-menu-toggle.active span:nth-child(3) {
-        transform: rotate(45deg) translate(-5px, -6px);
+    .back-to-home {
+        padding: 6px 12px;
+        font-size: 0.8rem;
     }
     
-    .hero-content {
-        padding: 1.5rem;
-        max-width: 100%;
-        width: 100%;
+    .back-arrow {
+        font-size: 1rem;
     }
-    
-    .hero-headline {
-        font-size: 3rem;
-        margin-bottom: 1.5rem;
-    }
-    
-    .hero-subheadline {
-        font-size: 1.2rem;
-        margin-bottom: 2.5rem;
-    }
-    
-    .hero-buttons {
-        flex-direction: column;
-        gap: 1rem;
-        align-items: center;
-        width: 100%;
-    }
-    
-    .btn-primary, .btn-secondary {
-        min-width: 220px;
-        padding: 1rem 2rem;
-        font-size: 1.1rem;
-    }
-    
-
     
     .form-header h2 {
         font-size: 1.8rem;
@@ -675,33 +597,10 @@ body {
 }
 
 @media (max-width: 480px) {
-    .header {
-        padding: 1rem;
+    .campaign-form-container {
+        padding: 25px 15px;
+        max-height: 100%;
     }
-    
-    .header-logo h1 {
-        font-size: 1.5rem;
-    }
-    
-    .hero-headline {
-        font-size: 2.8rem;
-    }
-    
-    .hero-subheadline {
-        font-size: 1.1rem;
-    }
-    
-    .btn-primary, .btn-secondary {
-        min-width: 200px;
-        padding: 0.8rem 1.5rem;
-        font-size: 1rem;
-    }
-    
-    .watermark-cover {
-        height: 70px;
-    }
-    
-
     
     .form-header h2 {
         font-size: 1.6rem;
