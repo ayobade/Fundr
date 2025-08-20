@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     let currentStep = 1;
     const totalSteps = 6;
+    let galleryImages = [];
+    const maxGalleryImages = 5;
+    let coverImageData = null;
     
     if (!nextBtn || !prevBtn || !publishBtn) return;
     
@@ -94,24 +97,19 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('summaryDeadline').textContent = deadline !== '-' ? deadline : '-';
         document.getElementById('summaryRewards').textContent = companyName !== '-' ? 'Company Profile' : 'No Company Profile';
         document.getElementById('summaryWallet').textContent = wallet !== '-' ? `${wallet.substring(0, 10)}...` : '-';
+        
+        const coverContainer = document.getElementById('summaryCoverContainer');
+        const coverImage = document.getElementById('summaryCoverImage');
+        
+        if (coverImageData) {
+            coverImage.src = coverImageData.src;
+            coverContainer.style.display = 'block';
+        } else {
+            coverContainer.style.display = 'none';
+        }
     }
     
-    function resetForm() {
-        currentStep = 1;
-        campaignForm.reset();
-        
-        const steps = document.querySelectorAll('.form-step');
-        steps.forEach((step, index) => {
-            const isFirst = index === 0;
-            step.classList.toggle('active', isFirst);
-            step.style.display = isFirst ? 'block' : 'none';
-        });
-        
-        nextBtn.style.display = 'inline-block';
-        publishBtn.style.display = 'none';
-        
-        updateStep();
-    }
+
     
     nextBtn.addEventListener('click', () => {
         if (validateCurrentStep() && currentStep < totalSteps) {
@@ -129,10 +127,142 @@ document.addEventListener('DOMContentLoaded', function() {
     
     if (uploadArea && coverUpload) {
         uploadArea.addEventListener('click', () => coverUpload.click());
+        
+        coverUpload.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    showImagePreview(e.target.result, file.name);
+                };
+                reader.readAsDataURL(file);
+            }
+        });
     }
+    
+    function showImagePreview(imageSrc, fileName) {
+        const uploadArea = document.getElementById('uploadArea');
+        
+        coverImageData = { src: imageSrc, name: fileName };
+        
+        uploadArea.innerHTML = `
+            <div class="image-preview-container">
+                <img src="${imageSrc}" alt="${fileName}" class="uploaded-image">
+                <button type="button" class="remove-image-btn" aria-label="Remove image">×</button>
+            </div>
+        `;
+        
+        uploadArea.classList.add('has-image');
+        
+        const removeBtn = uploadArea.querySelector('.remove-image-btn');
+        removeBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            removeImage();
+        });
+    }
+    
+    function removeImage() {
+        const uploadArea = document.getElementById('uploadArea');
+        const coverUpload = document.getElementById('coverUpload');
+        
+        coverImageData = null;
+        
+        uploadArea.innerHTML = `
+            <div class="upload-content">
+                <span>📁</span>
+                <p>Click to upload or drag & drop</p>
+                <small>PNG, JPG up to 10MB</small>
+            </div>
+        `;
+        
+        uploadArea.classList.remove('has-image');
+        coverUpload.value = '';
+        
+        uploadArea.addEventListener('click', () => coverUpload.click());
+        }
     
     if (galleryUpload && galleryFiles) {
         galleryUpload.addEventListener('click', () => galleryFiles.click());
+        
+        galleryFiles.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);
+            const remainingSlots = maxGalleryImages - galleryImages.length;
+            const filesToProcess = files.slice(0, remainingSlots);
+            
+            filesToProcess.forEach(file => {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        addGalleryImage(e.target.result, file.name);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            e.target.value = '';
+        });
+    }
+    
+    function addGalleryImage(imageSrc, fileName) {
+        galleryImages.push({ src: imageSrc, name: fileName });
+        updateGalleryDisplay();
+    }
+    
+    function removeGalleryImage(index) {
+        galleryImages.splice(index, 1);
+        updateGalleryDisplay();
+    }
+    
+    function updateGalleryDisplay() {
+        const galleryUpload = document.getElementById('galleryUpload');
+        
+        if (galleryImages.length === 0) {
+            galleryUpload.innerHTML = `
+                <div class="upload-content">
+                    <span>🖼️</span>
+                    <p>+ Add Images/Videos</p>
+                </div>
+            `;
+            galleryUpload.classList.remove('has-gallery-images');
+            galleryUpload.addEventListener('click', () => document.getElementById('galleryFiles').click());
+        } else {
+            let imagesHtml = '';
+            
+            galleryImages.forEach((image, index) => {
+                imagesHtml += `
+                    <div class="gallery-image-container">
+                        <img src="${image.src}" alt="${image.name}" class="gallery-uploaded-image">
+                        <button type="button" class="remove-gallery-btn" data-index="${index}" aria-label="Remove image">×</button>
+                    </div>
+                `;
+            });
+            
+            if (galleryImages.length < maxGalleryImages) {
+                imagesHtml += `
+                    <div class="gallery-add-container" id="galleryAddContainer">
+                        <span class="add-icon">+</span>
+                        <p>Add More</p>
+                        <small>${galleryImages.length}/${maxGalleryImages}</small>
+                    </div>
+                `;
+            }
+            
+            galleryUpload.innerHTML = `<div class="gallery-images-grid">${imagesHtml}</div>`;
+            galleryUpload.classList.add('has-gallery-images');
+            
+            const removeButtons = galleryUpload.querySelectorAll('.remove-gallery-btn');
+            removeButtons.forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const index = parseInt(this.getAttribute('data-index'));
+                    removeGalleryImage(index);
+                });
+            });
+            
+            const addContainer = galleryUpload.querySelector('#galleryAddContainer');
+            if (addContainer) {
+                addContainer.addEventListener('click', () => document.getElementById('galleryFiles').click());
+            }
+        }
     }
     
     campaignForm.addEventListener('submit', e => {

@@ -15,7 +15,7 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.8);
+    background: rgba(0, 0, 0, 0.8);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -26,7 +26,7 @@ body {
 .campaign-layout {
     width: 100vw;
     height: 100vh;
-    background: white;
+    background: rgb(0, 0, 0);
     border-radius: 0;
     overflow: hidden;
     box-shadow: none;
@@ -81,7 +81,7 @@ body {
     background: #0a0a0a;
     position: relative;
     overflow-y: auto;
-    max-height: 100%;
+    max-height: 100vh;
     display: flex;
     justify-content: center;
     align-items: flex-start;
@@ -91,26 +91,6 @@ body {
     width: 100%;
     max-width: 560px;
     padding: 40px;
-    overflow-y: auto;
-    max-height: 100vh;
-}
-
-.campaign-form-container::-webkit-scrollbar {
-    width: 8px;
-}
-
-.campaign-form-container::-webkit-scrollbar-track {
-    background: #333;
-    border-radius: 4px;
-}
-
-.campaign-form-container::-webkit-scrollbar-thumb {
-    background: #666;
-    border-radius: 4px;
-}
-
-.campaign-form-container::-webkit-scrollbar-thumb:hover {
-    background: #888;
 }
 
 .campaign-header {
@@ -253,6 +233,17 @@ body {
     transition: all 0.3s ease;
 }
 
+.form-group select {
+    padding-right: 30px;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23ffffff' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
+
 .form-group input:focus,
 .form-group textarea:focus,
 .form-group select:focus {
@@ -268,8 +259,13 @@ body {
 
 .form-row {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr auto;
     gap: 15px;
+}
+
+input[name="rewardQuantity"] {
+    width: 120px;
+    max-width: 120px;
 }
 
 .amount-input {
@@ -338,6 +334,158 @@ body {
     font-family: 'Roboto', sans-serif;
     font-size: 0.8rem;
     color: #ccc;
+}
+
+.upload-area.has-image {
+    padding: 0;
+    border: none;
+    background: transparent;
+    text-align: left;
+}
+
+.image-preview-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    border-radius: 8px;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.uploaded-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.remove-image-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #ff4444;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.remove-image-btn:hover {
+    background: #ff4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+.gallery-upload.has-gallery-images {
+    padding: 0;
+    border: none;
+    background: transparent;
+    text-align: left;
+}
+
+.gallery-images-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    align-items: flex-start;
+}
+
+.gallery-image-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    border-radius: 8px;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.gallery-uploaded-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.remove-gallery-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #ff4444;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.remove-gallery-btn:hover {
+    background: #ff4444;
+    color: white;
+    transform: scale(1.1);
+}
+
+.gallery-add-container {
+    width: 120px;
+    height: 120px;
+    border: 2px dashed #666;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #333;
+    flex-shrink: 0;
+    text-align: center;
+}
+
+.gallery-add-container:hover {
+    border-color: #338f42;
+    background: #444;
+}
+
+.gallery-add-container .add-icon {
+    font-size: 2rem;
+    color: #666;
+    margin-bottom: 8px;
+    display: block;
+}
+
+.gallery-add-container:hover .add-icon {
+    color: #338f42;
+}
+
+.gallery-add-container p {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.9rem;
+    color: #fff;
+    margin: 0;
+    margin-bottom: 4px;
+}
+
+.gallery-add-container small {
+    font-family: 'Roboto', sans-serif;
+    font-size: 0.8rem;
+    color: #ccc;
+    margin: 0;
 }
 
 .rewards-container {
@@ -418,6 +566,21 @@ body {
     color: #fff;
 }
 
+.summary-cover-container {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.summary-cover-image {
+    max-width: auto;
+    max-height: 150px;
+    width: auto;
+    height: auto;
+    border-radius: 8px;
+    object-fit: cover;
+    border: 1px solid #555;
+}
+
 .checkbox-option {
     display: flex;
     align-items: center;
@@ -481,44 +644,13 @@ body {
     box-shadow: 0 4px 15px rgba(51, 143, 66, 0.3);
 }
 
-.form-navigation #prevBtn.btn-secondary {
-    background: transparent !important;
-    color: #338f42 !important;
-    border: 2px solid #338f42 !important;
+.form-navigation #prevBtn {
     margin-right: auto;
-    cursor: pointer !important;
-    z-index: 1000 !important;
-    position: relative !important;
-    pointer-events: auto !important;
-    user-select: none !important;
-    -webkit-user-select: none !important;
-    -moz-user-select: none !important;
-    -ms-user-select: none !important;
-    position: relative !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: auto !important;
-    bottom: auto !important;
 }
 
 .form-navigation #nextBtn,
 .form-navigation #publishBtn {
     margin-left: auto;
-}
-
-.form-navigation #prevBtn.btn-secondary:hover {
-    background: #338f42 !important;
-    color: white !important;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(51, 143, 66, 0.3);
-}
-
-.form-navigation #prevBtn.btn-secondary:disabled {
-    background: transparent !important;
-    border-color: #338f42 !important;
-    color: #338f42 !important;
-    opacity: 0.7;
-    cursor: not-allowed !important;
 }
 
 .skip-btn {
