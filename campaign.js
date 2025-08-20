@@ -265,16 +265,75 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    campaignForm.addEventListener('submit', e => {
-        e.preventDefault();
-        const confirmCheckbox = document.getElementById('confirmInfo');
-        if (confirmCheckbox && confirmCheckbox.checked) {
-            alert('Campaign published successfully!');
-            window.location.href = 'index.html';
-        } else {
-            alert('Please confirm that all information is correct before publishing.');
-        }
-    });
+    if (campaignForm) {
+        campaignForm.addEventListener('submit', e => {
+            e.preventDefault();
+            console.log('Form submission triggered');
+            
+            const confirmCheckbox = document.getElementById('confirmInfo');
+            
+            if (!confirmCheckbox || !confirmCheckbox.checked) {
+                showAlert('Please confirm that all information is correct before publishing.', 'warning');
+                return;
+            }
+            
+            const campaignTitle = document.getElementById('campaignTitle').value || 'Your Campaign';
+            const confirmPublish = confirm(
+                `Are you sure you want to publish "${campaignTitle}"?\n\n` +
+                'Once published, your campaign will be live and visible to potential backers.\n\n' +
+                'Click OK to proceed or Cancel to review your campaign.'
+            );
+            
+            if (confirmPublish) {
+                showAlert('🎉 Campaign published successfully!\n\nYour campaign is now live and ready to receive backing.', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }
+        });
+    }
+    
+    // Also add direct click handler as backup
+    if (publishBtn) {
+        publishBtn.addEventListener('click', function(e) {
+            console.log('Publish button clicked');
+            // Since this is a submit button, prevent default and handle manually
+            e.preventDefault();
+            
+            const confirmCheckbox = document.getElementById('confirmInfo');
+            
+            if (!confirmCheckbox || !confirmCheckbox.checked) {
+                showAlert('Please confirm that all information is correct before publishing.', 'warning');
+                return;
+            }
+            
+            const campaignTitle = document.getElementById('campaignTitle').value || 'Your Campaign';
+            const confirmPublish = confirm(
+                `Are you sure you want to publish "${campaignTitle}"?\n\n` +
+                'Once published, your campaign will be live and visible to potential backers.\n\n' +
+                'Click OK to proceed or Cancel to review your campaign.'
+            );
+            
+            if (confirmPublish) {
+                showAlert('🎉 Campaign published successfully!\n\nYour campaign is now live and ready to receive backing.', 'success');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 2000);
+            }
+        });
+    }
+    
+    function showAlert(message, type = 'info') {
+        const alertTypes = {
+            success: { icon: '✅', color: '#338f42' },
+            warning: { icon: '⚠️', color: '#ff9500' },
+            error: { icon: '❌', color: '#ff4444' },
+            info: { icon: 'ℹ️', color: '#0066cc' }
+        };
+        
+        const alertConfig = alertTypes[type] || alertTypes.info;
+        alert(`${alertConfig.icon} ${message}`);
+    }
     
     updateStep();
 });

@@ -668,8 +668,18 @@ input[name="rewardQuantity"] {
 }
 
 @media (max-width: 768px) {
+    .campaign-page {
+        position: static;
+        background: none;
+        backdrop-filter: none;
+        z-index: auto;
+    }
+    
     .campaign-layout {
         flex-direction: column;
+        width: 100vw;
+        height: auto;
+        min-height: 100vh;
     }
     
     .campaign-sidebar {
