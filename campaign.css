@@ -679,11 +679,14 @@ input[name="rewardQuantity"] {
     
     .campaign-content {
         width: 100vw;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        height: 100vh;
     }
     
     .campaign-form-container {
-        padding: 30px 20px;
-        max-height: 100%;
+        padding: 30px 20px 40px 20px;
+        min-height: auto;
     }
     
     .campaign-header {
@@ -730,8 +733,8 @@ input[name="rewardQuantity"] {
 
 @media (max-width: 480px) {
     .campaign-form-container {
-        padding: 25px 15px;
-        max-height: 100%;
+        padding: 25px 15px 40px 15px;
+        min-height: auto;
     }
     
     .form-header h2 {
@@ -746,6 +749,8 @@ input[name="rewardQuantity"] {
     .form-navigation {
         flex-direction: column;
         gap: 10px;
+        margin-top: 30px;
+        padding-bottom: 20px;
     }
     
     .form-navigation button {
