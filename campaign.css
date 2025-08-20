@@ -10,28 +10,16 @@ body {
 }
 
 .campaign-page {
-    position: fixed;
-    top: 0;
-    left: 0;
     width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 10000;
-    backdrop-filter: blur(5px);
+    min-height: 100vh;
+    background: rgb(0, 0, 0);
 }
 
 .campaign-layout {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    min-height: 100vh;
     background: rgb(0, 0, 0);
-    border-radius: 0;
-    overflow: hidden;
-    box-shadow: none;
     display: flex;
-    position: relative;
 }
 
 .campaign-sidebar {
@@ -668,18 +656,8 @@ input[name="rewardQuantity"] {
 }
 
 @media (max-width: 768px) {
-    .campaign-page {
-        position: static;
-        background: none;
-        backdrop-filter: none;
-        z-index: auto;
-    }
-    
     .campaign-layout {
         flex-direction: column;
-        width: 100vw;
-        height: auto;
-        min-height: 100vh;
     }
     
     .campaign-sidebar {
