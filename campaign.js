@@ -179,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function() {
         coverUpload.value = '';
         
         uploadArea.addEventListener('click', () => coverUpload.click());
-        }
+    }
     
     if (galleryUpload && galleryFiles) {
         galleryUpload.addEventListener('click', () => galleryFiles.click());
@@ -298,9 +298,9 @@ document.addEventListener('DOMContentLoaded', function() {
         publishBtn.addEventListener('click', function(e) {
             console.log('Publish button clicked');
             // Since this is a submit button, prevent default and handle manually
-            e.preventDefault();
+        e.preventDefault();
             
-            const confirmCheckbox = document.getElementById('confirmInfo');
+        const confirmCheckbox = document.getElementById('confirmInfo');
             
             if (!confirmCheckbox || !confirmCheckbox.checked) {
                 showAlert('Please confirm that all information is correct before publishing.', 'warning');
@@ -317,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (confirmPublish) {
                 showAlert('🎉 Campaign published successfully!\n\nYour campaign is now live and ready to receive backing.', 'success');
                 setTimeout(() => {
-                    window.location.href = 'index.html';
+            window.location.href = 'index.html';
                 }, 2000);
             }
         });
