@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Support Project - CrowdFundr</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="support.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-logo">
+            <h1>CrowdFundr</h1>
+        </div>
+        <nav class="header-nav">
+            <a href="index.html">Home</a>
+            <a href="Funding.html">Browse Projects</a>
+            <a href="howitworks.html">How it Works</a>
+            <a href="showcase.html">Showcase</a>
+            <a href="aboutus.html">About Us</a>
+        </nav>
+        <div class="header-cta">
+            <a href="campaign.html" class="btn-primary">Create Campaign</a>
+        </div>
+        <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <div class="support-page">
+        <div class="support-container">
+            <!-- Campaign Overview -->
+            <div class="campaign-overview">
+                <button class="back-btn" onclick="history.back()">
+                    <span>←</span> Back to Browse
+                </button>
+                
+                <div class="campaign-header">
+                    <div class="campaign-image">
+                        <img src="img1.png" alt="Campaign Image" id="campaignImage">
+                    </div>
+                    <div class="campaign-info">
+                        <div class="campaign-category" id="campaignCategory">Technology</div>
+                        <h1 class="campaign-title" id="campaignTitle">Revolutionary Smart Home System</h1>
+                        <p class="campaign-creator">by <span id="campaignCreator">TechInnovate</span></p>
+                        
+                        <div class="campaign-stats">
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%" id="progressBar"></div>
+                                </div>
+                                <div class="stats-grid">
+                                    <div class="stat">
+                                        <span class="stat-value" id="raisedAmount">$75,000</span>
+                                        <span class="stat-label">raised</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value" id="goalAmount">$100,000</span>
+                                        <span class="stat-label">goal</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value" id="daysLeft">15</span>
+                                        <span class="stat-label">days left</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value" id="backersCount">247</span>
+                                        <span class="stat-label">backers</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="campaign-description">
+                            <p id="campaignDescription">An AI-powered home automation system that learns your preferences and optimizes energy usage. Revolutionary technology that will change how we interact with our homes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Support Form -->
+            <div class="support-form-container">
+                <div class="support-form-header">
+                    <h2>Support This Project</h2>
+                    <div class="step-indicator">
+                        <span id="stepText">Step 1 of 3</span>
+                        <div class="progress-bar">
+                            <div class="progress-fill" id="progressFill"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <form class="support-form" id="supportForm">
+                    <!-- Step 1: Contribution Amount -->
+                    <div class="form-step active" data-step="1">
+                        <h3>Contribution Amount</h3>
+                        <div class="amount-input-container">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" id="contributionAmount" name="contributionAmount" placeholder="Enter amount" min="1" required>
+                        </div>
+                        <div class="amount-error-message" id="amountError">Please enter a valid contribution amount.</div>
+                        
+                        <div class="backer-info">
+                            <div class="section-header">
+                                <h3>Your Information</h3>
+                                <div class="anonymous-toggle">
+                                    <label class="toggle-switch">
+                                        <input type="checkbox" id="donateAnonymously" name="donateAnonymously">
+                                        <span class="toggle-slider"></span>
+                                        <span class="toggle-label">Donate Anonymously</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="firstName">First Name</label>
+                                    <input type="text" id="firstName" name="firstName" required>
+                                    <div class="field-error-message" id="firstNameError">Please enter your first name.</div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="lastName">Last Name</label>
+                                    <input type="text" id="lastName" name="lastName" required>
+                                    <div class="field-error-message" id="lastNameError">Please enter your last name.</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" name="email" required>
+                                <div class="field-error-message" id="emailError">Please enter a valid email address.</div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="phone">Phone Number (Optional)</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+
+                            <div class="form-group">
+                                <label for="note">Add Note (Optional)</label>
+                                <textarea id="note" name="note" rows="3" placeholder="Any special message or note for the creator..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 2: Payment Method -->
+                    <div class="form-step" data-step="2">
+                        <h3>Payment Method</h3>
+                        
+                        <div class="payment-options">
+                            <div class="payment-option">
+                                <input type="radio" name="paymentMethod" id="crypto" value="crypto" checked>
+                                <label for="crypto" class="payment-label">
+                                    <span class="payment-icon">₿</span>
+                                    <span class="payment-text">Cryptocurrency</span>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" name="paymentMethod" id="card" value="card">
+                                <label for="card" class="payment-label">
+                                    <span class="payment-icon">💳</span>
+                                    <span class="payment-text">Credit/Debit Card</span>
+                                </label>
+                            </div>
+                            <div class="payment-option">
+                                <input type="radio" name="paymentMethod" id="paypal" value="paypal">
+                                <label for="paypal" class="payment-label">
+                                    <span class="payment-icon">🅿️</span>
+                                    <span class="payment-text">PayPal</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="crypto-details" id="cryptoDetails">
+                            <div class="form-group">
+                                <label for="cryptoType">Choose Cryptocurrency</label>
+                                <select id="cryptoType" name="cryptoType">
+                                    <option value="BTC">Bitcoin (BTC)</option>
+                                    <option value="ETH">Ethereum (ETH)</option>
+                                    <option value="SOL">Solana (SOL)</option>
+                                </select>
+                            </div>
+                            <div class="wallet-destination">
+                                <label>Send Payment To:</label>
+                                <div class="wallet-address-container">
+                                    <div class="wallet-address" id="destinationWallet">
+                                        <span class="wallet-text" id="walletText">bc1q5wh95h7vdwuu80nhpdhuxpznrxmcxnkndaswum</span>
+                                        <button type="button" class="copy-btn" onclick="copyWalletAddress()">Copy</button>
+                                    </div>
+                                    <div class="qr-placeholder">
+                                        <div class="qr-code" id="qrCode">
+                                            <span>QR Code</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="payment-instruction">
+                                    Send your contribution to the wallet address above. Your support will be confirmed once the transaction is processed.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Step 3: Review & Confirm -->
+                    <div class="form-step" data-step="3">
+                        <h3>Review & Confirm</h3>
+                        
+                        <div class="support-summary">
+                            <h4>Support Summary</h4>
+                            <div class="summary-details">
+                                <div class="summary-row">
+                                    <span>Contribution Amount:</span>
+                                    <span class="amount" id="summaryAmount">$0</span>
+                                </div>
+                                <div class="summary-row">
+                                    <span>Platform Fee (5%):</span>
+                                    <span class="fee" id="summaryFee">$0</span>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total:</span>
+                                    <span class="total-amount" id="summaryTotal">$0</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="confirmation-details">
+                            <h4>Donation Details</h4>
+                            <div class="detail-row">
+                                <span>Donor:</span>
+                                <span id="reviewDonor">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Email:</span>
+                                <span id="reviewEmail">-</span>
+                            </div>
+                            <div class="detail-row">
+                                <span>Payment Method:</span>
+                                <span id="reviewPayment">-</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="checkbox-option">
+                                <input type="checkbox" id="confirmSupport" name="confirmSupport" required>
+                                <span>I confirm the information is correct and I want to support this project</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Navigation -->
+                    <div class="form-navigation">
+                        <button type="button" class="btn-secondary" id="prevBtn" style="display: none;">Previous</button>
+                        <button type="button" class="btn-primary" id="nextBtn">Next</button>
+                        <button type="submit" class="btn-primary support-btn" id="supportBtn" style="display: none;">
+                            <span class="btn-text">Support This Project</span>
+                            <span class="btn-amount" id="btnAmount">$0</span>
+                        </button>
+                    </div>
+                    
+                    <p class="secure-note">🔒 Your payment information is secure and encrypted</p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="nav.js"></script>
+    <script src="support.js"></script>
+</body>
+</html>

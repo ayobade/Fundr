@@ -115,8 +115,44 @@ document.addEventListener('DOMContentLoaded', function() {
     document.querySelectorAll('.support-btn').forEach(btn => {
         btn.addEventListener('click', function(e) {
             e.preventDefault();
-            const campaignTitle = this.closest('.campaign-card').querySelector('.campaign-title').textContent;
-            alert(`Thank you for your interest in supporting "${campaignTitle}"!\n\nThis would redirect to the campaign details page.`);
+            const campaignCard = this.closest('.campaign-card');
+            
+            // Extract all campaign data
+            const campaignTitle = campaignCard.querySelector('.campaign-title').textContent;
+            const campaignCategory = campaignCard.getAttribute('data-category');
+            const campaignDescription = campaignCard.querySelector('.campaign-description').textContent;
+            const campaignCreator = campaignCard.querySelector('.campaign-creator').textContent;
+            const campaignImage = campaignCard.querySelector('.campaign-image img')?.src || '';
+            
+            // Extract stats
+            const stats = campaignCard.querySelectorAll('.stat-value');
+            const raisedAmount = stats[0]?.textContent || '$0';
+            const targetAmount = stats[1]?.textContent || '$100,000';
+            const daysLeft = stats[2]?.textContent || '30';
+            
+            // Extract progress
+            const progressFill = campaignCard.querySelector('.progress-fill');
+            const progressPercent = progressFill?.style.width || '0%';
+            
+            // Create campaign ID from title (in real app, this would be a proper ID)
+            const campaignId = campaignTitle.toLowerCase().replace(/[^a-z0-9]/g, '-');
+            
+            // Create URL with all campaign data
+            const params = new URLSearchParams({
+                campaign: campaignId,
+                title: campaignTitle,
+                category: campaignCategory,
+                description: campaignDescription,
+                creator: campaignCreator,
+                image: campaignImage,
+                raised: raisedAmount,
+                target: targetAmount,
+                days: daysLeft,
+                progress: progressPercent.replace('%', '')
+            });
+            
+            // Redirect to support page with campaign data
+            window.location.href = `support.html?${params.toString()}`;
         });
     });
 
