@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrowdFundr - Browse Campaigns</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="funding.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="funding-page">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-logo">
+                <h1>CrowdFundr</h1>
+            </div>
+            <nav class="header-nav">
+                <a href="index.html">Home</a>
+                <a href="Funding.html" class="active">Browse Projects</a>
+                <a href="howitworks.html">How it Works</a>
+                <a href="showcase.html">Showcase</a>
+                <a href="aboutus.html">About Us</a>
+            </nav>
+            <div class="header-cta">
+                <a href="campaign.html" class="btn-primary">Create Campaign</a>
+            </div>
+            <button class="mobile-menu-toggle" aria-label="Toggle mobile menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-container">
+                <h1>Discover Amazing Projects</h1>
+                <p>Support innovative ideas and bring creative projects to life</p>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search campaigns..." id="searchInput">
+                    <button class="search-submit">Search</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Filter Section -->
+        <section class="filter-section">
+            <div class="filter-container">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all">All Projects</button>
+                    <button class="filter-tab" data-filter="technology">Technology</button>
+                    <button class="filter-tab" data-filter="art">Art</button>
+                    <button class="filter-tab" data-filter="music">Music</button>
+                    <button class="filter-tab" data-filter="film">Film</button>
+                    <button class="filter-tab" data-filter="business">Business</button>
+                </div>
+                <div class="sort-options">
+                    <select id="sortSelect">
+                        <option value="newest">Newest First</option>
+                        <option value="ending-soon">Ending Soon</option>
+                        <option value="most-funded">Most Funded</option>
+                        <option value="goal-amount">Goal Amount</option>
+                    </select>
+                </div>
+            </div>
+        </section>
+
+        <!-- Campaigns Grid -->
+        <main class="campaigns-section">
+            <div class="campaigns-container">
+                <div class="campaigns-grid" id="campaignsGrid">
+                    
+                    <!-- Sample Campaign 1 -->
+                    <div class="campaign-card" data-category="technology">
+                        <div class="campaign-image">
+                            <img src="img1.png" alt="Smart Home Device">
+                            <div class="campaign-badge">Featured</div>
+                        </div>
+                        <div class="campaign-content">
+                            <div class="campaign-category">Technology</div>
+                            <h3 class="campaign-title">Revolutionary Smart Home System</h3>
+                            <p class="campaign-description">An AI-powered home automation system that learns your preferences and optimizes energy usage.</p>
+                            <div class="campaign-creator">
+                                <span>by TechInnovate</span>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 75%"></div>
+                                </div>
+                                <div class="stats-grid">
+                                    <div class="stat">
+                                        <span class="stat-value">$75,000</span>
+                                        <span class="stat-label">raised</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">$100,000</span>
+                                        <span class="stat-label">goal</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">15</span>
+                                        <span class="stat-label">days left</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="support-btn">Support Project</button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Campaign 2 -->
+                    <div class="campaign-card" data-category="art">
+                        <div class="campaign-image">
+                            <img src="img1.png" alt="Art Exhibition">
+                            <div class="campaign-badge new">New</div>
+                        </div>
+                        <div class="campaign-content">
+                            <div class="campaign-category">Art</div>
+                            <h3 class="campaign-title">Contemporary Art Exhibition</h3>
+                            <p class="campaign-description">A groundbreaking exhibition featuring emerging artists from around the world.</p>
+                            <div class="campaign-creator">
+                                <span>by ArtSpace Gallery</span>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 45%"></div>
+                                </div>
+                                <div class="stats-grid">
+                                    <div class="stat">
+                                        <span class="stat-value">$22,500</span>
+                                        <span class="stat-label">raised</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">$50,000</span>
+                                        <span class="stat-label">goal</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">28</span>
+                                        <span class="stat-label">days left</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="support-btn">Support Project</button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Campaign 3 -->
+                    <div class="campaign-card" data-category="music">
+                        <div class="campaign-image">
+                            <img src="img1.png" alt="Music Album">
+                        </div>
+                        <div class="campaign-content">
+                            <div class="campaign-category">Music</div>
+                            <h3 class="campaign-title">Indie Album Production</h3>
+                            <p class="campaign-description">Help us produce our debut album and bring our music to the world.</p>
+                            <div class="campaign-creator">
+                                <span>by The Echoes</span>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 90%"></div>
+                                </div>
+                                <div class="stats-grid">
+                                    <div class="stat">
+                                        <span class="stat-value">$18,000</span>
+                                        <span class="stat-label">raised</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">$20,000</span>
+                                        <span class="stat-label">goal</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">7</span>
+                                        <span class="stat-label">days left</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="support-btn">Support Project</button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Campaign 4 -->
+                    <div class="campaign-card" data-category="business">
+                        <div class="campaign-image">
+                            <img src="img1.png" alt="Eco Product">
+                            <div class="campaign-badge eco">Eco-Friendly</div>
+                        </div>
+                        <div class="campaign-content">
+                            <div class="campaign-category">Business</div>
+                            <h3 class="campaign-title">Sustainable Packaging Solution</h3>
+                            <p class="campaign-description">Revolutionary biodegradable packaging that reduces environmental impact.</p>
+                            <div class="campaign-creator">
+                                <span>by GreenPack Inc</span>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 60%"></div>
+                                </div>
+                                <div class="stats-grid">
+                                    <div class="stat">
+                                        <span class="stat-value">$120,000</span>
+                                        <span class="stat-label">raised</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">$200,000</span>
+                                        <span class="stat-label">goal</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">22</span>
+                                        <span class="stat-label">days left</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="support-btn">Support Project</button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Campaign 5 -->
+                    <div class="campaign-card" data-category="film">
+                        <div class="campaign-image">
+                            <img src="img1.png" alt="Film Project">
+                        </div>
+                        <div class="campaign-content">
+                            <div class="campaign-category">Film</div>
+                            <h3 class="campaign-title">Independent Documentary Film</h3>
+                            <p class="campaign-description">A powerful documentary exploring climate change impacts on local communities.</p>
+                            <div class="campaign-creator">
+                                <span>by FilmMakers United</span>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 35%"></div>
+                                </div>
+                                <div class="stats-grid">
+                                    <div class="stat">
+                                        <span class="stat-value">$17,500</span>
+                                        <span class="stat-label">raised</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">$50,000</span>
+                                        <span class="stat-label">goal</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">35</span>
+                                        <span class="stat-label">days left</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="support-btn">Support Project</button>
+                        </div>
+                    </div>
+
+                    <!-- Sample Campaign 6 -->
+                    <div class="campaign-card" data-category="technology">
+                        <div class="campaign-image">
+                            <img src="img1.png" alt="VR Headset">
+                            <div class="campaign-badge trending">Trending</div>
+                        </div>
+                        <div class="campaign-content">
+                            <div class="campaign-category">Technology</div>
+                            <h3 class="campaign-title">Next-Gen VR Experience</h3>
+                            <p class="campaign-description">Immersive virtual reality headset with advanced haptic feedback technology.</p>
+                            <div class="campaign-creator">
+                                <span>by VR Innovations</span>
+                            </div>
+                            <div class="campaign-stats">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 150%"></div>
+                                </div>
+                                <div class="stats-grid">
+                                    <div class="stat">
+                                        <span class="stat-value">$300,000</span>
+                                        <span class="stat-label">raised</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">$200,000</span>
+                                        <span class="stat-label">goal</span>
+                                    </div>
+                                    <div class="stat">
+                                        <span class="stat-value">12</span>
+                                        <span class="stat-label">days left</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="support-btn">Support Project</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="funding-footer">
+            <div class="footer-container">
+                <div class="footer-content">
+                    <div class="footer-section">
+                        <h3>CrowdFundr</h3>
+                        <p>Empowering creators and innovators worldwide</p>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Quick Links</h4>
+                        <a href="index.html">Home</a>
+                        <a href="campaign.html">Create Campaign</a>
+                        <a href="aboutus.html">About Us</a>
+                    </div>
+                    <div class="footer-section">
+                        <h4>Support</h4>
+                        <a href="#">Help Center</a>
+                        <a href="#">Contact Us</a>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                </div>
+                <div class="footer-bottom">
+                    <p>&copy; 2024 CrowdFundr. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="nav.js"></script>
+    <script src="funding.js"></script>
+</body>
+</html>
