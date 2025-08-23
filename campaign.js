@@ -1,3 +1,93 @@
+let dbName = 'CampaignImageDB';
+let dbVersion = 1;
+let db = null;
+
+function initIndexedDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, dbVersion);
+        
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            db = request.result;
+            resolve(db);
+        };
+        
+        request.onupgradeneeded = (event) => {
+            db = event.target.result;
+            
+            if (!db.objectStoreNames.contains('campaignImages')) {
+                const store = db.createObjectStore('campaignImages', { keyPath: 'campaignId' });
+                store.createIndex('campaignId', 'campaignId', { unique: true });
+            }
+        };
+    });
+}
+
+function saveImagesToIndexedDB(campaignId, imageData) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        
+        const transaction = db.transaction(['campaignImages'], 'readwrite');
+        const store = transaction.objectStore('campaignImages');
+        
+        const data = {
+            campaignId: campaignId,
+            coverImage: imageData.coverImage,
+            galleryImages: imageData.galleryImages,
+            timestamp: Date.now()
+        };
+        
+        const request = store.put(data);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function getImagesFromIndexedDB(campaignId) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        
+        const transaction = db.transaction(['campaignImages'], 'readonly');
+        const store = transaction.objectStore('campaignImages');
+        const request = store.get(campaignId);
+        
+        request.onsuccess = () => {
+            if (request.result) {
+                resolve({
+                    coverImage: request.result.coverImage,
+                    galleryImages: request.result.galleryImages
+                });
+            } else {
+                resolve(null);
+            }
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
+function deleteImagesFromIndexedDB(campaignId) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        
+        const transaction = db.transaction(['campaignImages'], 'readwrite');
+        const store = transaction.objectStore('campaignImages');
+        const request = store.delete(campaignId);
+        
+        request.onsuccess = () => resolve();
+        request.onerror = () => reject(request.error);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const backToHome = document.getElementById('backToHome');
     const nextBtn = document.getElementById('nextBtn');
@@ -17,6 +107,10 @@ document.addEventListener('DOMContentLoaded', function() {
     let coverImageData = null;
     
     if (!nextBtn || !prevBtn || !publishBtn) return;
+    
+    initIndexedDB().catch(error => {
+        console.error('Failed to initialize IndexedDB:', error);
+    });
     
     if (backToHome) {
         backToHome.addEventListener('click', function(e) {
@@ -323,7 +417,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     if (publishBtn) {
-        publishBtn.addEventListener('click', function(e) {
+        publishBtn.addEventListener('click', async function(e) {
             e.preventDefault();
             
             const confirmCheckbox = document.getElementById('confirmInfo');
@@ -342,7 +436,7 @@ document.addEventListener('DOMContentLoaded', function() {
             
             if (confirmPublish) {
                 try {
-                    saveCampaignData();
+                    await saveCampaignData();
                     showCustomAlert('success', 'Campaign Published!', 'Your campaign is now live and ready to receive backing.', () => {
                         window.location.href = 'Funding.html';
                     });
@@ -353,9 +447,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    function saveCampaignData() {
+    async function saveCampaignData() {
+        const campaignId = Date.now().toString();
+        
         const campaignData = {
-            id: Date.now().toString(),
+            id: campaignId,
             title: document.getElementById('campaignTitle').value || '',
             shortTagline: document.getElementById('shortTagline').value || '',
             category: document.getElementById('campaignCategory').value || '',
@@ -378,43 +474,47 @@ document.addEventListener('DOMContentLoaded', function() {
             backers: '0',
             daysLeft: calculateDaysLeft(),
             progress: '0',
-            image: coverImageData ? coverImageData.src : 'img1.png',
-            galleryImages: galleryImages.map(img => img.src) || []
+            hasImages: !!(coverImageData || galleryImages.length > 0)
         };
 
-        let allCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
-        allCampaigns.push(campaignData);
-
         try {
-            localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
-        } catch (error) {
-            if (error.name === 'QuotaExceededError') {
-                const campaignDataNoImages = {
-                    ...campaignData,
-                    image: 'img1.png',
-                    galleryImages: []
+            if (coverImageData || galleryImages.length > 0) {
+                const imageData = {
+                    coverImage: coverImageData ? coverImageData.src : null,
+                    galleryImages: galleryImages.map(img => img.src) || []
                 };
                 
-                allCampaigns[allCampaigns.length - 1] = campaignDataNoImages;
-                
+                await saveImagesToIndexedDB(campaignId, imageData);
+            }
+            
+            let allCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
+            allCampaigns.push(campaignData);
+            localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
+            
+        } catch (error) {
+            if (error.name === 'QuotaExceededError') {
                 try {
-                    localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
-                    showCustomAlert('warning', 'Storage Limit Reached', 'Campaign saved but images were not included to save space.');
-                } catch (stillError) {
-                    if (allCampaigns.length > 1) {
-                        allCampaigns.splice(0, allCampaigns.length - 10);
-                        try {
-                            localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
-                            showCustomAlert('warning', 'Storage Cleaned', 'Campaign saved. Older campaigns were removed to make space.');
-                        } catch (finalError) {
-                            allCampaigns = [campaignDataNoImages];
-                            localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
-                            showCustomAlert('warning', 'Storage Reset', 'Campaign saved. Previous campaigns were cleared due to storage limits.');
+                    let allCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
+                    if (allCampaigns.length > 10) {
+                        const removedCampaigns = allCampaigns.splice(0, allCampaigns.length - 10);
+                        for (const campaign of removedCampaigns) {
+                            try {
+                                await deleteImagesFromIndexedDB(campaign.id);
+                            } catch (deleteError) {
+                                console.warn('Failed to delete images for campaign:', campaign.id);
+                            }
                         }
-                    } else {
-                        showCustomAlert('error', 'Storage Full', 'Unable to save campaign due to storage constraints.');
-                        throw new Error('Storage full');
                     }
+                    
+                    allCampaigns.push(campaignData);
+                    localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
+                    showCustomAlert('warning', 'Storage Cleaned', 'Campaign saved. Older campaigns were removed to make space.');
+                    
+                } catch (stillError) {
+                    campaignData.hasImages = false;
+                    let allCampaigns = [campaignData];
+                    localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
+                    showCustomAlert('warning', 'Storage Reset', 'Campaign saved. Previous campaigns were cleared due to storage limits.');
                 }
             } else {
                 throw error;

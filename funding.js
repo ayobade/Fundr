@@ -1,3 +1,53 @@
+let dbName = 'CampaignImageDB';
+let dbVersion = 1;
+let db = null;
+
+function initIndexedDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, dbVersion);
+        
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            db = request.result;
+            resolve(db);
+        };
+        
+        request.onupgradeneeded = (event) => {
+            db = event.target.result;
+            
+            if (!db.objectStoreNames.contains('campaignImages')) {
+                const store = db.createObjectStore('campaignImages', { keyPath: 'campaignId' });
+                store.createIndex('campaignId', 'campaignId', { unique: true });
+            }
+        };
+    });
+}
+
+function getImagesFromIndexedDB(campaignId) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        
+        const transaction = db.transaction(['campaignImages'], 'readonly');
+        const store = transaction.objectStore('campaignImages');
+        const request = store.get(campaignId);
+        
+        request.onsuccess = () => {
+            if (request.result) {
+                resolve({
+                    coverImage: request.result.coverImage,
+                    galleryImages: request.result.galleryImages
+                });
+            } else {
+                resolve(null);
+            }
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const filterTabs = document.querySelectorAll('.filter-tab');
     const sortSelect = document.getElementById('sortSelect');
@@ -6,7 +56,12 @@ document.addEventListener('DOMContentLoaded', function() {
     let campaignCards = document.querySelectorAll('.campaign-card');
     let observer;
 
-    loadUserCampaigns();
+    initIndexedDB().then(() => {
+        loadUserCampaigns();
+    }).catch(error => {
+        console.error('Failed to initialize IndexedDB:', error);
+        loadUserCampaigns();
+    });
 
     filterTabs.forEach(tab => {
         tab.addEventListener('click', function() {
@@ -131,7 +186,7 @@ document.addEventListener('DOMContentLoaded', function() {
         observer.observe(card);
     });
 
-    function loadUserCampaigns() {
+    async function loadUserCampaigns() {
         const userCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
         const campaignsGrid = document.getElementById('campaignsGrid');
         
@@ -143,20 +198,40 @@ document.addEventListener('DOMContentLoaded', function() {
             return dateB.getTime() - dateA.getTime();
         });
 
-        sortedCampaigns.reverse().forEach(campaign => {
-            const campaignCard = createCampaignCard(campaign);
+        for (const campaign of sortedCampaigns.reverse()) {
+            const campaignCard = await createCampaignCard(campaign);
             campaignsGrid.insertBefore(campaignCard, campaignsGrid.firstChild);
-        });
+        }
 
         campaignCards = document.querySelectorAll('.campaign-card');
         bindCampaignCardEvents();
     }
 
-    function createCampaignCard(campaign) {
+    async function createCampaignCard(campaign) {
         const cardDiv = document.createElement('div');
         cardDiv.className = 'campaign-card';
         cardDiv.setAttribute('data-category', campaign.category || 'other');
-        cardDiv.setAttribute('data-campaign', JSON.stringify(campaign));
+        
+        let campaignWithImages = { ...campaign };
+        
+        if (campaign.hasImages && db) {
+            try {
+                const images = await getImagesFromIndexedDB(campaign.id);
+                if (images) {
+                    campaignWithImages.image = images.coverImage || 'img1.png';
+                    campaignWithImages.galleryImages = images.galleryImages || [];
+                }
+            } catch (error) {
+                console.warn('Failed to load images for campaign:', campaign.id, error);
+                campaignWithImages.image = 'img1.png';
+                campaignWithImages.galleryImages = [];
+            }
+        } else {
+            campaignWithImages.image = 'img1.png';
+            campaignWithImages.galleryImages = [];
+        }
+        
+        cardDiv.setAttribute('data-campaign', JSON.stringify(campaignWithImages));
         
         const targetAmount = parseFloat(campaign.targetAmount) || 0;
         const raisedAmount = parseFloat(campaign.raised) || 0;
@@ -164,8 +239,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         let cardHTML = `<div class="campaign-image">`;
         
-        if (campaign.image && campaign.image !== 'img1.png') {
-            cardHTML += `<img src="${campaign.image}" alt="${campaign.title || 'Campaign Image'}">`;
+        if (campaignWithImages.image && campaignWithImages.image !== 'img1.png') {
+            cardHTML += `<img src="${campaignWithImages.image}" alt="${campaign.title || 'Campaign Image'}">`;
         } else {
             cardHTML += `<img src="img1.png" alt="Default Campaign Image">`;
         }

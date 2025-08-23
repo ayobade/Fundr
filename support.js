@@ -1,3 +1,53 @@
+let dbName = 'CampaignImageDB';
+let dbVersion = 1;
+let db = null;
+
+function initIndexedDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open(dbName, dbVersion);
+        
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => {
+            db = request.result;
+            resolve(db);
+        };
+        
+        request.onupgradeneeded = (event) => {
+            db = event.target.result;
+            
+            if (!db.objectStoreNames.contains('campaignImages')) {
+                const store = db.createObjectStore('campaignImages', { keyPath: 'campaignId' });
+                store.createIndex('campaignId', 'campaignId', { unique: true });
+            }
+        };
+    });
+}
+
+function getImagesFromIndexedDB(campaignId) {
+    return new Promise((resolve, reject) => {
+        if (!db) {
+            reject(new Error('Database not initialized'));
+            return;
+        }
+        
+        const transaction = db.transaction(['campaignImages'], 'readonly');
+        const store = transaction.objectStore('campaignImages');
+        const request = store.get(campaignId);
+        
+        request.onsuccess = () => {
+            if (request.result) {
+                resolve({
+                    coverImage: request.result.coverImage,
+                    galleryImages: request.result.galleryImages
+                });
+            } else {
+                resolve(null);
+            }
+        };
+        request.onerror = () => reject(request.error);
+    });
+}
+
 document.addEventListener('DOMContentLoaded', function() {
     const supportForm = document.getElementById('supportForm');
     const contributionAmountInput = document.getElementById('contributionAmount');
@@ -345,7 +395,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
     });
 
-    function loadCampaignData() {
+    async function loadCampaignData() {
         const urlParams = new URLSearchParams(window.location.search);
         
         let campaignData = {};
@@ -394,17 +444,18 @@ document.addEventListener('DOMContentLoaded', function() {
         if (imageElement) {
             let imageSrc = 'img1.png';
             
-            if (campaignData.image && campaignData.image !== '[uploaded-image]') {
-                imageSrc = campaignData.image;
-            } else if (campaignData.image === '[uploaded-image]') {
-                const hasImage = urlParams.get('hasImage') === 'true';
-                if (hasImage) {
-                    const userCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
-                    const fullCampaign = userCampaigns.find(c => c.title === campaignData.title);
-                    if (fullCampaign && fullCampaign.image && fullCampaign.image !== 'img1.png') {
-                        imageSrc = fullCampaign.image;
+            if (campaignData.hasImages && campaignData.id && db) {
+                try {
+                    const images = await getImagesFromIndexedDB(campaignData.id);
+                    if (images && images.coverImage) {
+                        imageSrc = images.coverImage;
+                        campaignData.galleryImages = images.galleryImages || [];
                     }
+                } catch (error) {
+                    console.warn('Failed to load images for campaign:', campaignData.id, error);
                 }
+            } else if (campaignData.image && campaignData.image !== '[uploaded-image]' && campaignData.image !== 'img1.png') {
+                imageSrc = campaignData.image;
             }
             
             imageElement.src = imageSrc;
@@ -607,7 +658,12 @@ document.addEventListener('DOMContentLoaded', function() {
         setTimeout(() => okBtn.focus(), 100);
     }
 
-    loadCampaignData();
+    initIndexedDB().then(() => {
+        loadCampaignData();
+    }).catch(error => {
+        console.error('Failed to initialize IndexedDB:', error);
+        loadCampaignData();
+    });
     animateProgressBar();
     addRealTimeValidation();
     updateSummary();
