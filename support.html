@@ -51,7 +51,7 @@
                         <div class="campaign-stats">
                             <div class="progress-container">
                                 <div class="progress-bar">
-                                    <div class="progress-fill" style="width: 75%" id="progressBar"></div>
+                                    <div class="progress-fill" style="width: 0%" id="progressBar"></div>
                                 </div>
                                 <div class="stats-grid">
                                     <div class="stat">
@@ -266,6 +266,20 @@
     </div>
 
 
+
+    <div id="imageModal" class="image-modal">
+        <div class="modal-content">
+            <span class="modal-close">&times;</span>
+            <img id="modalImage" class="modal-image" src="" alt="Gallery Image">
+            <div class="modal-navigation">
+                <button id="prevImage" class="nav-btn prev-btn">&#8249;</button>
+                <button id="nextImage" class="nav-btn next-btn">&#8250;</button>
+            </div>
+            <div class="image-counter">
+                <span id="imageCounter">1 / 1</span>
+            </div>
+        </div>
+    </div>
 
     <script src="nav.js"></script>
     <script src="support.js"></script>

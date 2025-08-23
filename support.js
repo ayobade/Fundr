@@ -460,11 +460,32 @@ document.addEventListener('DOMContentLoaded', function() {
             
             imageElement.src = imageSrc;
             imageElement.alt = campaignData.title || 'Campaign Image';
+            
+            if (imageSrc !== 'img1.png') {
+                imageElement.style.cursor = 'pointer';
+                imageElement.onclick = function() {
+                    // Include gallery images if available
+                    const allImages = [imageSrc];
+                    if (campaignData.galleryImages && campaignData.galleryImages.length > 0) {
+                        campaignData.galleryImages.forEach(galleryImg => {
+                            if (!allImages.includes(galleryImg)) {
+                                allImages.push(galleryImg);
+                            }
+                        });
+                    }
+                    openImageModal(imageSrc, allImages.length > 1 ? allImages : null);
+                };
+            }
         }
         
         const currency = campaignData.currency || 'USD';
         const targetAmount = parseFloat(campaignData.targetAmount) || 0;
-        const raisedAmount = parseFloat(campaignData.raised) || 0;
+        let raisedAmount = parseFloat(campaignData.raised) || 0;
+        
+        if (isNaN(raisedAmount) || raisedAmount < 0) {
+            raisedAmount = 0;
+        }
+        
         const progressPercent = targetAmount > 0 ? Math.min((raisedAmount / targetAmount) * 100, 100) : 0;
         
         updateElement('raisedAmount', `${currency} ${raisedAmount.toLocaleString()}`);
@@ -474,7 +495,12 @@ document.addEventListener('DOMContentLoaded', function() {
         
         const progressFill = document.getElementById('progressBar');
         if (progressFill) {
-            progressFill.style.width = `${progressPercent}%`;
+            progressFill.style.setProperty('width', `${Math.max(0, progressPercent)}%`, 'important');
+        }
+        
+        const progressText = document.querySelector('.progress-text');
+        if (progressText) {
+            progressText.textContent = `${Math.round(progressPercent)}% funded`;
         }
         
         addAdditionalDetails(campaignData);
@@ -567,7 +593,7 @@ document.addEventListener('DOMContentLoaded', function() {
             detailsHTML.push(`<div class="detail-item"><strong>Gallery:</strong></div>`);
             detailsHTML.push(`<div class="campaign-gallery">`);
             actualGalleryImages.slice(0, 5).forEach((img, index) => {
-                detailsHTML.push(`<img src="${img}" alt="Gallery Image ${index + 1}" class="gallery-thumb">`);
+                detailsHTML.push(`<img src="${img}" alt="Gallery Image ${index + 1}" class="gallery-thumb" data-gallery-index="${index}" style="cursor: pointer;">`);
             });
             if (actualGalleryImages.length > 5) {
                 detailsHTML.push(`<span class="gallery-more">+${actualGalleryImages.length - 5} more</span>`);
@@ -577,18 +603,31 @@ document.addEventListener('DOMContentLoaded', function() {
         
         if (detailsHTML.length > 0) {
             additionalDetails.innerHTML += detailsHTML.join('');
+            
+            // Add click listeners to gallery images
+            if (actualGalleryImages.length > 0) {
+                const galleryThumbs = additionalDetails.querySelectorAll('.gallery-thumb[data-gallery-index]');
+                galleryThumbs.forEach((thumb, index) => {
+                    thumb.addEventListener('click', function() {
+                        const clickedIndex = parseInt(this.getAttribute('data-gallery-index'));
+                        openImageModal(actualGalleryImages[clickedIndex], actualGalleryImages);
+                    });
+                });
+            }
         } else {
             additionalDetails.style.display = 'none';
         }
     }
 
     function animateProgressBar() {
-        const progressBar = document.querySelector('.progress-fill');
-        const width = progressBar.style.width;
-        progressBar.style.width = '0%';
-        setTimeout(() => {
-            progressBar.style.width = width;
-        }, 500);
+        const progressBar = document.getElementById('progressBar');
+        if (progressBar) {
+            const currentWidth = progressBar.style.width;
+            progressBar.style.setProperty('width', '0%', 'important');
+            setTimeout(() => {
+                progressBar.style.setProperty('width', currentWidth, 'important');
+            }, 500);
+        }
     }
 
     function addRealTimeValidation() {
@@ -722,3 +761,121 @@ function fallbackCopyTextToClipboard(text, btn) {
     
     document.body.removeChild(textArea);
 }
+
+// Image Modal Variables
+let currentGalleryImages = [];
+let currentImageIndex = 0;
+
+// Image Modal Functions
+window.openImageModal = function(imageSrc, galleryImages = null) {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const imageCounter = document.getElementById('imageCounter');
+    const prevBtn = document.getElementById('prevImage');
+    const nextBtn = document.getElementById('nextImage');
+    
+    if (!modal || !modalImage) return;
+    
+    // If galleryImages is provided, use it; otherwise create array with single image
+    if (galleryImages && Array.isArray(galleryImages)) {
+        currentGalleryImages = galleryImages;
+        currentImageIndex = galleryImages.indexOf(imageSrc);
+        if (currentImageIndex === -1) currentImageIndex = 0;
+    } else {
+        currentGalleryImages = [imageSrc];
+        currentImageIndex = 0;
+    }
+    
+    showCurrentImage();
+    modal.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+};
+
+function showCurrentImage() {
+    const modalImage = document.getElementById('modalImage');
+    const imageCounter = document.getElementById('imageCounter');
+    const prevBtn = document.getElementById('prevImage');
+    const nextBtn = document.getElementById('nextImage');
+    
+    if (!modalImage || currentGalleryImages.length === 0) return;
+    
+    modalImage.src = currentGalleryImages[currentImageIndex];
+    imageCounter.textContent = `${currentImageIndex + 1} / ${currentGalleryImages.length}`;
+    
+    // Show/hide navigation arrows based on gallery size and position
+    if (currentGalleryImages.length > 1) {
+        prevBtn.style.display = 'flex';
+        nextBtn.style.display = 'flex';
+        prevBtn.disabled = currentImageIndex === 0;
+        nextBtn.disabled = currentImageIndex === currentGalleryImages.length - 1;
+    } else {
+        prevBtn.style.display = 'none';
+        nextBtn.style.display = 'none';
+    }
+}
+
+function showPreviousImage() {
+    if (currentImageIndex > 0) {
+        currentImageIndex--;
+        showCurrentImage();
+    }
+}
+
+function showNextImage() {
+    if (currentImageIndex < currentGalleryImages.length - 1) {
+        currentImageIndex++;
+        showCurrentImage();
+    }
+}
+
+function hideImageModal() {
+    const modal = document.getElementById('imageModal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.body.style.overflow = 'auto';
+    }
+}
+
+// Modal event listeners - Initialize after DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('imageModal');
+    const closeBtn = document.querySelector('.modal-close');
+    const prevBtn = document.getElementById('prevImage');
+    const nextBtn = document.getElementById('nextImage');
+    
+    if (closeBtn) {
+        closeBtn.addEventListener('click', hideImageModal);
+    }
+    
+    if (prevBtn) {
+        prevBtn.addEventListener('click', showPreviousImage);
+    }
+    
+    if (nextBtn) {
+        nextBtn.addEventListener('click', showNextImage);
+    }
+    
+    if (modal) {
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                hideImageModal();
+            }
+        });
+    }
+    
+    document.addEventListener('keydown', function(e) {
+        if (modal && modal.style.display === 'block') {
+            switch (e.key) {
+                case 'Escape':
+                    hideImageModal();
+                    break;
+                case 'ArrowLeft':
+                    showPreviousImage();
+                    break;
+                case 'ArrowRight':
+                    showNextImage();
+                    break;
+            }
+        }
+    });
+});
