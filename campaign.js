@@ -354,88 +354,68 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function saveCampaignData() {
-        try {
-            const campaignData = {
-                id: Date.now().toString(),
-                title: document.getElementById('campaignTitle').value || '',
-                shortTagline: document.getElementById('shortTagline').value || '',
-                category: document.getElementById('campaignCategory').value || '',
-                location: document.getElementById('location').value || '',
-                targetAmount: document.getElementById('targetAmount').value || '',
-                currency: document.getElementById('currency').value || 'USD',
-                minContribution: document.getElementById('minContribution').value || '',
-                deadline: document.getElementById('deadline').value || '',
-                description: document.getElementById('fullStory').value || '',
-                companyName: document.getElementById('companyName').value || '',
-                companyWebsite: document.getElementById('companyWebsite').value || '',
-                industry: document.getElementById('companyIndustry').value || '',
-                companyLocation: document.getElementById('companyLocation').value || '',
-                walletAddress: document.getElementById('walletAddress').value || '',
-                preferredToken: document.getElementById('preferredToken').value || '',
-                payoutWallet: document.getElementById('payoutWallet').value || '',
-                createdAt: new Date().toISOString(),
-                creator: document.getElementById('companyName').value || 'Campaign Creator',
-                raised: '0',
-                backers: '0',
-                daysLeft: calculateDaysLeft(),
-                progress: '0',
-                image: coverImageData ? coverImageData.src : 'img1.png',
-                galleryImages: galleryImages.map(img => img.src) || []
-            };
+        const campaignData = {
+            id: Date.now().toString(),
+            title: document.getElementById('campaignTitle').value || '',
+            shortTagline: document.getElementById('shortTagline').value || '',
+            category: document.getElementById('campaignCategory').value || '',
+            location: document.getElementById('location').value || '',
+            targetAmount: document.getElementById('targetAmount').value || '',
+            currency: document.getElementById('currency').value || 'USD',
+            minContribution: document.getElementById('minContribution').value || '',
+            deadline: document.getElementById('deadline').value || '',
+            description: document.getElementById('fullStory').value || '',
+            companyName: document.getElementById('companyName').value || '',
+            companyWebsite: document.getElementById('companyWebsite').value || '',
+            industry: document.getElementById('companyIndustry').value || '',
+            companyLocation: document.getElementById('companyLocation').value || '',
+            walletAddress: document.getElementById('walletAddress').value || '',
+            preferredToken: document.getElementById('preferredToken').value || '',
+            payoutWallet: document.getElementById('payoutWallet').value || '',
+            createdAt: new Date().toISOString(),
+            creator: document.getElementById('companyName').value || 'Campaign Creator',
+            raised: '0',
+            backers: '0',
+            daysLeft: calculateDaysLeft(),
+            progress: '0',
+            image: coverImageData ? coverImageData.src : 'img1.png',
+            galleryImages: galleryImages.map(img => img.src) || []
+        };
 
-            const existingCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
-            
-            const dataSize = JSON.stringify(campaignData).length;
-            const totalSize = JSON.stringify(existingCampaigns).length + dataSize;
-            
-            if (totalSize > 4 * 1024 * 1024) {
-                existingCampaigns.splice(0, Math.max(1, existingCampaigns.length - 5));
-            }
-            
-            existingCampaigns.push(campaignData);
-            
-            try {
-                localStorage.setItem('userCampaigns', JSON.stringify(existingCampaigns));
-            } catch (quotaError) {
-                if (quotaError.name === 'QuotaExceededError') {
-                    throw quotaError;
-                }
-            }
-            
+        let allCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
+        allCampaigns.push(campaignData);
+
+        try {
+            localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
         } catch (error) {
             if (error.name === 'QuotaExceededError') {
                 const campaignDataNoImages = {
-                    id: Date.now().toString(),
-                    title: document.getElementById('campaignTitle').value || '',
-                    shortTagline: document.getElementById('shortTagline').value || '',
-                    category: document.getElementById('campaignCategory').value || '',
-                    location: document.getElementById('location').value || '',
-                    targetAmount: document.getElementById('targetAmount').value || '',
-                    currency: document.getElementById('currency').value || 'USD',
-                    minContribution: document.getElementById('minContribution').value || '',
-                    deadline: document.getElementById('deadline').value || '',
-                    description: document.getElementById('fullStory').value || '',
-                    companyName: document.getElementById('companyName').value || '',
-                    companyWebsite: document.getElementById('companyWebsite').value || '',
-                    industry: document.getElementById('companyIndustry').value || '',
-                    companyLocation: document.getElementById('companyLocation').value || '',
-                    walletAddress: document.getElementById('walletAddress').value || '',
-                    preferredToken: document.getElementById('preferredToken').value || '',
-                    payoutWallet: document.getElementById('payoutWallet').value || '',
-                    createdAt: new Date().toISOString(),
-                    creator: document.getElementById('companyName').value || 'Campaign Creator',
-                    raised: '0',
-                    backers: '0',
-                    daysLeft: calculateDaysLeft(),
-                    progress: '0',
+                    ...campaignData,
                     image: 'img1.png',
                     galleryImages: []
                 };
                 
-                const existingCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
-                existingCampaigns.push(campaignDataNoImages);
-                localStorage.setItem('userCampaigns', JSON.stringify(existingCampaigns));
-                showCustomAlert('warning', 'Storage Limit Reached', 'Campaign saved but images were not included to save space.');
+                allCampaigns[allCampaigns.length - 1] = campaignDataNoImages;
+                
+                try {
+                    localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
+                    showCustomAlert('warning', 'Storage Limit Reached', 'Campaign saved but images were not included to save space.');
+                } catch (stillError) {
+                    if (allCampaigns.length > 1) {
+                        allCampaigns.splice(0, allCampaigns.length - 10);
+                        try {
+                            localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
+                            showCustomAlert('warning', 'Storage Cleaned', 'Campaign saved. Older campaigns were removed to make space.');
+                        } catch (finalError) {
+                            allCampaigns = [campaignDataNoImages];
+                            localStorage.setItem('userCampaigns', JSON.stringify(allCampaigns));
+                            showCustomAlert('warning', 'Storage Reset', 'Campaign saved. Previous campaigns were cleared due to storage limits.');
+                        }
+                    } else {
+                        showCustomAlert('error', 'Storage Full', 'Unable to save campaign due to storage constraints.');
+                        throw new Error('Storage full');
+                    }
+                }
             } else {
                 throw error;
             }
