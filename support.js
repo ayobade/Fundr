@@ -20,7 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalSteps = 3;
     let currentAmount = 0;
 
-    // Update summary calculations
     function updateSummary() {
         const fee = Math.round(currentAmount * 0.05 * 100) / 100;
         const total = currentAmount + fee;
@@ -31,18 +30,15 @@ document.addEventListener('DOMContentLoaded', function() {
         btnAmount.textContent = `$${total.toFixed(2)}`;
     }
 
-    // Handle contribution amount input
     contributionAmountInput.addEventListener('input', function() {
         currentAmount = parseFloat(this.value) || 0;
         updateSummary();
         
-        // Hide error message when user starts typing
         if (currentAmount > 0) {
             hideAmountError();
         }
     });
 
-    // Add event listeners to clear field errors on input
     function addFieldErrorClearListeners() {
         const requiredFields = document.querySelectorAll('[required]');
         
@@ -64,7 +60,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Step navigation
     function updateStep() {
         const steps = document.querySelectorAll('.form-step');
         
@@ -89,7 +84,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Navigate to next step
     nextBtn.addEventListener('click', () => {
         if (validateCurrentStep() && currentStep < totalSteps) {
             currentStep++;
@@ -97,7 +91,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Navigate to previous step
     prevBtn.addEventListener('click', () => {
         if (currentStep > 1) {
             currentStep--;
@@ -105,14 +98,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Validate current step
     function validateCurrentStep() {
         const currentStepElement = document.querySelector(`[data-step="${currentStep}"]`);
         const requiredFields = currentStepElement.querySelectorAll('[required]');
         
         let isValid = true;
         
-        // Special validation for step 1 (amount)
         if (currentStep === 1) {
             if (currentAmount <= 0) {
                 showAmountError();
@@ -122,7 +113,6 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // Clear any existing field errors first
         clearFieldErrors();
         
         requiredFields.forEach(field => {
@@ -135,7 +125,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return isValid;
     }
 
-    // Show amount error state
     function showAmountError() {
         const amountContainer = document.querySelector('.amount-input-container');
         const amountError = document.getElementById('amountError');
@@ -144,13 +133,11 @@ document.addEventListener('DOMContentLoaded', function() {
         amountError.classList.add('show');
         contributionAmountInput.focus();
         
-        // Remove error state after animation
         setTimeout(() => {
             amountContainer.classList.remove('error');
         }, 500);
     }
 
-    // Hide amount error state
     function hideAmountError() {
         const amountContainer = document.querySelector('.amount-input-container');
         const amountError = document.getElementById('amountError');
@@ -159,27 +146,23 @@ document.addEventListener('DOMContentLoaded', function() {
         amountError.classList.remove('show');
     }
 
-    // Show field error state
     function showFieldError(field) {
         const formGroup = field.closest('.form-group');
         if (!formGroup) return;
         
         formGroup.classList.add('error');
         
-        // Get field-specific error message
         const fieldName = field.name || field.id;
         const errorElement = document.getElementById(fieldName + 'Error');
         if (errorElement) {
             errorElement.classList.add('show');
         }
         
-        // Remove error state after animation
         setTimeout(() => {
             formGroup.classList.remove('error');
         }, 500);
     }
 
-    // Clear all field errors
     function clearFieldErrors() {
         const errorGroups = document.querySelectorAll('.form-group.error');
         const errorMessages = document.querySelectorAll('.field-error-message.show');
@@ -193,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Update review data in step 3
     function updateReviewData() {
         const isAnonymous = anonymousToggle.checked;
         const firstName = document.getElementById('firstName').value;
@@ -201,26 +183,21 @@ document.addEventListener('DOMContentLoaded', function() {
         const email = document.getElementById('email').value;
         const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
         
-        // Update donor info
         const donorName = isAnonymous ? 'Anonymous Donor' : `${firstName} ${lastName}`;
         document.getElementById('reviewDonor').textContent = donorName;
         
-        // Update email
         document.getElementById('reviewEmail').textContent = isAnonymous ? 'Not provided' : email;
         
-        // Update payment method
         const paymentText = selectedPayment ? selectedPayment.value.charAt(0).toUpperCase() + selectedPayment.value.slice(1) : 'Cryptocurrency';
         document.getElementById('reviewPayment').textContent = paymentText;
     }
 
-    // Handle anonymous donation toggle
     if (anonymousToggle) {
         anonymousToggle.addEventListener('change', function() {
             toggleAnonymousMode(this.checked);
         });
     }
 
-    // Toggle anonymous mode
     function toggleAnonymousMode(isAnonymous) {
         const firstNameInput = document.getElementById('firstName');
         const lastNameInput = document.getElementById('lastName');
@@ -233,7 +210,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const phoneLabel = document.querySelector('label[for="phone"]');
 
         if (isAnonymous) {
-            // Disable fields and remove required attribute
             firstNameInput.disabled = true;
             lastNameInput.disabled = true;
             emailInput.disabled = true;
@@ -242,25 +218,21 @@ document.addEventListener('DOMContentLoaded', function() {
             firstNameInput.removeAttribute('required');
             emailInput.removeAttribute('required');
             
-            // Clear values
             firstNameInput.value = '';
             lastNameInput.value = '';
             emailInput.value = '';
             phoneInput.value = '';
             
-            // Add disabled class to labels
             firstNameLabel.classList.add('disabled');
             lastNameLabel.classList.add('disabled');
             emailLabel.classList.add('disabled');
             phoneLabel.classList.add('disabled');
             
-            // Set placeholder values
             firstNameInput.placeholder = 'Anonymous';
             lastNameInput.placeholder = 'Donor';
             emailInput.placeholder = 'Not provided';
             phoneInput.placeholder = 'Not provided';
         } else {
-            // Enable fields and restore required attribute
             firstNameInput.disabled = false;
             lastNameInput.disabled = false;
             emailInput.disabled = false;
@@ -269,13 +241,11 @@ document.addEventListener('DOMContentLoaded', function() {
             firstNameInput.setAttribute('required', '');
             emailInput.setAttribute('required', '');
             
-            // Remove disabled class from labels
             firstNameLabel.classList.remove('disabled');
             lastNameLabel.classList.remove('disabled');
             emailLabel.classList.remove('disabled');
             phoneLabel.classList.remove('disabled');
             
-            // Restore original placeholders
             firstNameInput.placeholder = '';
             lastNameInput.placeholder = '';
             emailInput.placeholder = '';
@@ -283,14 +253,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Wallet addresses for different cryptocurrencies
     const walletAddresses = {
         'BTC': 'bc1q5wh95h7vdwuu80nhpdhuxpznrxmcxnkndaswum',
         'ETH': '0xe7Ae6f99700B3463Ddf6B7fa807Ff735aDf7EAC4',
         'SOL': '26vvjS3DM9f9uMwEK2rRwh7T6MhUsmXpp9JjpmtEtLcC'
     };
 
-    // Handle payment method selection
     paymentMethods.forEach(method => {
         method.addEventListener('change', function() {
             if (this.value === 'crypto') {
@@ -302,13 +270,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Handle cryptocurrency type change
     const cryptoTypeSelect = document.getElementById('cryptoType');
     if (cryptoTypeSelect) {
         cryptoTypeSelect.addEventListener('change', updateWalletAddress);
     }
 
-    // Update wallet address based on selected cryptocurrency
     function updateWalletAddress() {
         const selectedCrypto = cryptoTypeSelect.value;
         const walletText = document.getElementById('walletText');
@@ -318,7 +284,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    // Form validation for final submission
     function validateForm() {
         const confirmCheckbox = document.getElementById('confirmSupport');
         
@@ -328,7 +293,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         
         if (currentAmount <= 0) {
-            // Go back to step 1 and show error
             currentStep = 1;
             updateStep();
             showAmountError();
@@ -338,7 +302,6 @@ document.addEventListener('DOMContentLoaded', function() {
         return true;
     }
 
-    // Handle form submission
     supportForm.addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -350,7 +313,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
         
-        // Get form data
         const isAnonymous = anonymousToggle.checked;
         const supportData = {
             amount: currentAmount,
@@ -365,7 +327,6 @@ document.addEventListener('DOMContentLoaded', function() {
             destinationWallet: document.getElementById('walletText').textContent
         };
 
-        // Show confirmation
         const campaignTitle = document.getElementById('campaignTitle').textContent;
         const total = currentAmount + (currentAmount * 0.05);
         
@@ -378,106 +339,198 @@ document.addEventListener('DOMContentLoaded', function() {
             `Payment Method: ${selectedPayment.value.charAt(0).toUpperCase() + selectedPayment.value.slice(1)}\n\n` +
             `${isAnonymous ? 'Your donation will remain anonymous.' : 'You will receive a confirmation email shortly with payment instructions.'}`;
 
-        alert(confirmMessage);
+        showCustomAlert('success', 'Support Successful!', confirmMessage, () => {
+            window.location.href = 'Funding.html';
+        });
         
-        console.log('Support Data:', supportData);
-        
-        // In a real application, you would send this data to your backend
-        // Redirect to browse projects page after successful support
-        window.location.href = 'Funding.html';
     });
 
-    // Load campaign data from URL parameters (if available)
     function loadCampaignData() {
         const urlParams = new URLSearchParams(window.location.search);
         
-        // Get all campaign data from URL
-        const campaignData = {
-            id: urlParams.get('campaign'),
-            title: urlParams.get('title'),
-            category: urlParams.get('category'),
-            description: urlParams.get('description'),
-            creator: urlParams.get('creator'),
-            image: urlParams.get('image'),
-            raised: urlParams.get('raised'),
-            target: urlParams.get('target'),
-            days: urlParams.get('days'),
-            progress: urlParams.get('progress')
-        };
+        let campaignData = {};
         
-        // Update campaign details
-        if (campaignData.title) {
-            const titleElement = document.getElementById('campaignTitle');
-            if (titleElement) {
-                titleElement.textContent = campaignData.title;
+        const dataParam = urlParams.get('data');
+        if (dataParam) {
+            try {
+                campaignData = JSON.parse(dataParam);
+            } catch (error) {
+                campaignData = {
+                    id: urlParams.get('campaign'),
+                    title: urlParams.get('title'),
+                    category: urlParams.get('category'),
+                    description: urlParams.get('description'),
+                    creator: urlParams.get('creator'),
+                    image: urlParams.get('image'),
+                    raised: urlParams.get('raised'),
+                    target: urlParams.get('target'),
+                    days: urlParams.get('days'),
+                    progress: urlParams.get('progress')
+                };
+            }
+        } else {
+            campaignData = {
+                id: urlParams.get('campaign'),
+                title: urlParams.get('title'),
+                category: urlParams.get('category'),
+                description: urlParams.get('description'),
+                creator: urlParams.get('creator'),
+                image: urlParams.get('image'),
+                raised: urlParams.get('raised'),
+                target: urlParams.get('target'),
+                days: urlParams.get('days'),
+                progress: urlParams.get('progress')
+            };
+        }
+        
+        updateElement('campaignTitle', campaignData.title || 'Untitled Campaign');
+        updateElement('campaignCategory', campaignData.category || 'Uncategorized');
+        updateElement('campaignCreator', campaignData.companyName || campaignData.creator || 'Anonymous Creator');
+        
+        const description = campaignData.description || campaignData.shortTagline || 'No description available.';
+        updateElement('campaignDescription', description);
+        
+        const imageElement = document.getElementById('campaignImage');
+        if (imageElement) {
+            let imageSrc = 'img1.png';
+            
+            if (campaignData.image && campaignData.image !== '[uploaded-image]') {
+                imageSrc = campaignData.image;
+            } else if (campaignData.image === '[uploaded-image]') {
+                const hasImage = urlParams.get('hasImage') === 'true';
+                if (hasImage) {
+                    const userCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
+                    const fullCampaign = userCampaigns.find(c => c.title === campaignData.title);
+                    if (fullCampaign && fullCampaign.image && fullCampaign.image !== 'img1.png') {
+                        imageSrc = fullCampaign.image;
+                    }
+                }
+            }
+            
+            imageElement.src = imageSrc;
+            imageElement.alt = campaignData.title || 'Campaign Image';
+        }
+        
+        const currency = campaignData.currency || 'USD';
+        const targetAmount = parseFloat(campaignData.targetAmount) || 0;
+        const raisedAmount = parseFloat(campaignData.raised) || 0;
+        const progressPercent = targetAmount > 0 ? Math.min((raisedAmount / targetAmount) * 100, 100) : 0;
+        
+        updateElement('raisedAmount', `${currency} ${raisedAmount.toLocaleString()}`);
+        updateElement('goalAmount', `${currency} ${targetAmount.toLocaleString()}`);
+        updateElement('daysLeft', campaignData.daysLeft || campaignData.days || 'N/A');
+        updateElement('backersCount', campaignData.backers || '0');
+        
+        const progressFill = document.getElementById('progressBar');
+        if (progressFill) {
+            progressFill.style.width = `${progressPercent}%`;
+        }
+        
+        addAdditionalDetails(campaignData);
+    }
+    
+    function updateElement(id, value) {
+        const element = document.getElementById(id);
+        if (element && value) {
+            element.textContent = value;
+        }
+    }
+    
+    function addAdditionalDetails(campaignData) {
+        const campaignDescription = document.querySelector('.campaign-description');
+        if (!campaignDescription) return;
+        
+        let additionalDetails = document.getElementById('additionalDetails');
+        if (!additionalDetails) {
+            additionalDetails = document.createElement('div');
+            additionalDetails.id = 'additionalDetails';
+            additionalDetails.className = 'campaign-additional-info';
+            campaignDescription.appendChild(additionalDetails);
+        } else {
+            additionalDetails.innerHTML = '';
+        }
+        
+        const detailsHTML = [];
+        
+        if (campaignData.shortTagline && campaignData.shortTagline !== campaignData.description) {
+            detailsHTML.push(`<div class="detail-item"><strong>Tagline:</strong> ${campaignData.shortTagline}</div>`);
+        }
+        
+        if (campaignData.location) {
+            detailsHTML.push(`<div class="detail-item"><strong>Location:</strong> 📍 ${campaignData.location}</div>`);
+        }
+        
+        if (campaignData.minContribution && parseFloat(campaignData.minContribution) > 0) {
+            detailsHTML.push(`<div class="detail-item"><strong>Minimum Contribution:</strong> ${campaignData.currency || 'USD'} ${parseFloat(campaignData.minContribution).toLocaleString()}</div>`);
+        }
+        
+        if (campaignData.deadline) {
+            const deadlineDate = new Date(campaignData.deadline);
+            detailsHTML.push(`<div class="detail-item"><strong>Deadline:</strong> ${deadlineDate.toLocaleDateString()}</div>`);
+        }
+        
+        if (campaignData.preferredToken) {
+            detailsHTML.push(`<div class="detail-item"><strong>Preferred Token:</strong> ${campaignData.preferredToken}</div>`);
+        }
+        
+        if (campaignData.companyWebsite) {
+            detailsHTML.push(`<div class="detail-item"><strong>Website:</strong> <a href="${campaignData.companyWebsite}" target="_blank">${campaignData.companyWebsite}</a></div>`);
+        }
+        
+        if (campaignData.companyIndustry || campaignData.industry) {
+            detailsHTML.push(`<div class="detail-item"><strong>Industry:</strong> ${campaignData.companyIndustry || campaignData.industry}</div>`);
+        }
+        
+        if (campaignData.companyLocation) {
+            detailsHTML.push(`<div class="detail-item"><strong>Company Location:</strong> 🏢 ${campaignData.companyLocation}</div>`);
+        }
+        
+        if (campaignData.walletAddress) {
+            detailsHTML.push(`<div class="detail-item"><strong>Funding Wallet:</strong> <code>${campaignData.walletAddress.substring(0, 20)}...</code></div>`);
+        }
+        
+        if (campaignData.payoutWallet) {
+            detailsHTML.push(`<div class="detail-item"><strong>Payout Wallet:</strong> <code>${campaignData.payoutWallet.substring(0, 20)}...</code></div>`);
+        }
+        
+        let actualGalleryImages = [];
+        
+        if (campaignData.galleryImages) {
+            if (Array.isArray(campaignData.galleryImages)) {
+                actualGalleryImages = campaignData.galleryImages;
+            } else if (typeof campaignData.galleryImages === 'string' && campaignData.galleryImages.includes('images]')) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const imageCount = parseInt(urlParams.get('imageCount') || '0');
+                
+                if (imageCount > 0) {
+                    const userCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
+                    const fullCampaign = userCampaigns.find(c => c.title === campaignData.title);
+                    if (fullCampaign && Array.isArray(fullCampaign.galleryImages)) {
+                        actualGalleryImages = fullCampaign.galleryImages;
+                    }
+                }
             }
         }
         
-        if (campaignData.category) {
-            const categoryElement = document.getElementById('campaignCategory');
-            if (categoryElement) {
-                categoryElement.textContent = campaignData.category.charAt(0).toUpperCase() + campaignData.category.slice(1);
+        if (actualGalleryImages.length > 0) {
+            detailsHTML.push(`<div class="detail-item"><strong>Gallery:</strong></div>`);
+            detailsHTML.push(`<div class="campaign-gallery">`);
+            actualGalleryImages.slice(0, 5).forEach((img, index) => {
+                detailsHTML.push(`<img src="${img}" alt="Gallery Image ${index + 1}" class="gallery-thumb">`);
+            });
+            if (actualGalleryImages.length > 5) {
+                detailsHTML.push(`<span class="gallery-more">+${actualGalleryImages.length - 5} more</span>`);
             }
+            detailsHTML.push(`</div>`);
         }
         
-        if (campaignData.description) {
-            const descriptionElement = document.getElementById('campaignDescription');
-            if (descriptionElement) {
-                descriptionElement.textContent = campaignData.description;
-            }
-        }
-        
-        if (campaignData.creator) {
-            const creatorElement = document.getElementById('campaignCreator');
-            if (creatorElement) {
-                creatorElement.textContent = campaignData.creator;
-            }
-        }
-        
-        if (campaignData.image) {
-            const campaignImage = document.getElementById('campaignImage');
-            if (campaignImage) {
-                campaignImage.src = campaignData.image;
-                campaignImage.alt = campaignData.title || 'Campaign Image';
-            }
-        }
-        
-        // Update funding stats
-        if (campaignData.raised) {
-            const raisedElement = document.querySelector('.campaign-details .stat-value');
-            if (raisedElement) {
-                raisedElement.textContent = campaignData.raised;
-            }
-        }
-        
-        if (campaignData.target) {
-            const statValues = document.querySelectorAll('.campaign-details .stat-value');
-            if (statValues[1]) {
-                statValues[1].textContent = campaignData.target;
-            }
-        }
-        
-        if (campaignData.days) {
-            const statValues = document.querySelectorAll('.campaign-details .stat-value');
-            if (statValues[2]) {
-                statValues[2].textContent = campaignData.days;
-            }
-        }
-        
-        // Update progress bar
-        if (campaignData.progress) {
-            const progressFill = document.querySelector('.campaign-details .progress-fill');
-            if (progressFill) {
-                progressFill.style.width = `${campaignData.progress}%`;
-            }
-        }
-        
-        if (campaignData.id) {
-            console.log('Loading campaign data for ID:', campaignData.id);
+        if (detailsHTML.length > 0) {
+            additionalDetails.innerHTML += detailsHTML.join('');
+        } else {
+            additionalDetails.style.display = 'none';
         }
     }
 
-    // Animate progress bar on load
     function animateProgressBar() {
         const progressBar = document.querySelector('.progress-fill');
         const width = progressBar.style.width;
@@ -487,9 +540,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 500);
     }
 
-
-
-    // Real-time validation
     function addRealTimeValidation() {
         const inputs = supportForm.querySelectorAll('input, textarea, select');
         
@@ -510,7 +560,53 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Initialize
+    function showCustomAlert(type = 'info', title = '', message = '', callback = null) {
+        const alertTypes = {
+            success: { icon: '✅', title: title || 'Success' },
+            error: { icon: '❌', title: title || 'Error' },
+            warning: { icon: '⚠️', title: title || 'Warning' },
+            info: { icon: 'ℹ️', title: title || 'Information' }
+        };
+        
+        const alertConfig = alertTypes[type] || alertTypes.info;
+        
+        const existingAlerts = document.querySelectorAll('.custom-alert-overlay');
+        existingAlerts.forEach(alert => alert.remove());
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'custom-alert-overlay';
+        
+        const alertBox = document.createElement('div');
+        alertBox.className = `custom-alert-box ${type}`;
+        
+        alertBox.innerHTML = `
+            <div class="alert-icon">${alertConfig.icon}</div>
+            <div class="alert-title">${alertConfig.title}</div>
+            <div class="alert-message">${message}</div>
+            <div class="alert-buttons">
+                <button class="alert-btn primary" id="alertOkBtn">OK</button>
+            </div>
+        `;
+        
+        overlay.appendChild(alertBox);
+        document.body.appendChild(overlay);
+        
+        const okBtn = alertBox.querySelector('#alertOkBtn');
+        okBtn.addEventListener('click', () => {
+            document.body.removeChild(overlay);
+            if (callback) callback();
+        });
+        
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                document.body.removeChild(overlay);
+                if (callback) callback();
+            }
+        });
+        
+        setTimeout(() => okBtn.focus(), 100);
+    }
+
     loadCampaignData();
     animateProgressBar();
     addRealTimeValidation();
@@ -518,14 +614,10 @@ document.addEventListener('DOMContentLoaded', function() {
     updateStep();
     addFieldErrorClearListeners();
     
-    // Set default crypto details visibility
     cryptoDetails.style.display = 'block';
-    
-    // Initialize wallet address
     updateWalletAddress();
 });
 
-// Copy wallet address function (global scope for onclick)
 function copyWalletAddress() {
     const walletText = document.getElementById('walletText').textContent;
     const copyBtn = document.querySelector('.copy-btn');
@@ -546,7 +638,6 @@ function copyWalletAddress() {
     }
 }
 
-// Fallback copy method
 function fallbackCopyTextToClipboard(text, btn) {
     const textArea = document.createElement("textarea");
     textArea.value = text;
@@ -567,7 +658,6 @@ function fallbackCopyTextToClipboard(text, btn) {
             btn.style.background = '#338f42';
         }, 2000);
     } catch (err) {
-        console.error('Copy failed:', err);
         btn.textContent = 'Copy Failed';
         setTimeout(() => {
             btn.textContent = 'Copy';

@@ -15,7 +15,7 @@ body {
     min-height: 100vh;
 }
 
-/* Header - Override main styles for funding page */
+
 .header {
     background: rgba(10, 10, 10, 0.95);
     backdrop-filter: blur(10px);
@@ -40,7 +40,7 @@ body {
     background: #338f42;
 }
 
-/* Hero Section */
+
 .hero-section {
     background: linear-gradient(135deg, rgba(51, 143, 66, 0.1), rgba(45, 122, 58, 0.05));
     padding: 80px 20px;
@@ -115,7 +115,7 @@ body {
     transform: translateX(-2px);
 }
 
-/* Filter Section */
+
 .filter-section {
     background: #111;
     padding: 30px 20px;
@@ -165,7 +165,7 @@ body {
     cursor: pointer;
 }
 
-/* Campaigns Section */
+
 .campaigns-section {
     padding: 50px 20px;
 }
@@ -267,6 +267,27 @@ body {
     font-size: 0.95rem;
     margin-bottom: 15px;
     line-height: 1.5;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+.campaign-card p,
+.campaign-content p,
+.campaign-tagline,
+.campaign-description,
+.detail-item {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    box-sizing: border-box;
 }
 
 .campaign-creator {
@@ -335,7 +356,7 @@ body {
     box-shadow: 0 5px 15px rgba(51, 143, 66, 0.4);
 }
 
-/* Footer */
+
 .funding-footer {
     background: #111;
     border-top: 1px solid #333;
@@ -379,7 +400,7 @@ body {
     color: #888;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     
     .hero-section h1 {
@@ -446,4 +467,95 @@ body {
         padding: 8px 15px;
         font-size: 0.9rem;
     }
+}
+
+
+.campaign-tagline {
+    font-size: 0.9rem;
+    color: #ccc;
+    margin: 5px 0;
+    font-style: italic;
+}
+
+.campaign-location {
+    font-size: 0.85rem;
+    color: #999;
+    margin: 5px 0;
+}
+
+.campaign-company-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 10px 0;
+    font-size: 0.85rem;
+}
+
+.company-industry {
+    background: #444;
+    color: #338f42;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+}
+
+.company-website {
+    color: #338f42;
+    text-decoration: none;
+    font-size: 0.8rem;
+}
+
+.company-website:hover {
+    text-decoration: underline;
+}
+
+.company-location {
+    color: #999;
+    font-size: 0.8rem;
+}
+
+.min-contribution {
+    font-size: 0.85rem;
+    color: #338f42;
+    font-weight: 500;
+    margin: 8px 0;
+}
+
+.campaign-deadline {
+    font-size: 0.85rem;
+    color: #ff9800;
+    margin: 5px 0;
+}
+
+.preferred-token {
+    font-size: 0.85rem;
+    color: #338f42;
+    background: rgba(51, 143, 66, 0.1);
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: inline-block;
+    margin: 5px 0;
+}
+
+.gallery-preview {
+    display: flex;
+    gap: 5px;
+    margin: 10px 0;
+    align-items: center;
+}
+
+.gallery-thumb {
+    width: 30px;
+    height: 30px;
+    border-radius: 4px;
+    object-fit: cover;
+    border: 1px solid #444;
+}
+
+.gallery-more {
+    font-size: 0.8rem;
+    color: #999;
+    background: #333;
+    padding: 2px 6px;
+    border-radius: 10px;
 }

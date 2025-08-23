@@ -9,7 +9,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const coverUpload = document.getElementById('coverUpload');
     const galleryUpload = document.getElementById('galleryUpload');
     const galleryFiles = document.getElementById('galleryFiles');
-    const campaignForm = document.getElementById('campaignForm');
     
     let currentStep = 1;
     const totalSteps = 6;
@@ -85,18 +84,48 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function updateSummary() {
-        const title = document.getElementById('campaignTitle').value || '-';
-        const amount = document.getElementById('targetAmount').value || '-';
-        const currency = document.getElementById('currency').value || 'USD';
-        const deadline = document.getElementById('deadline').value || '-';
-        const companyName = document.getElementById('companyName').value || '-';
-        const wallet = document.getElementById('walletAddress').value || '-';
+        const title = document.getElementById('campaignTitle').value;
+        const tagline = document.getElementById('shortTagline').value;
+        const category = document.getElementById('campaignCategory').value;
+        const location = document.getElementById('location').value;
+        const description = document.getElementById('fullStory').value;
         
-        document.getElementById('summaryTitle').textContent = title;
-        document.getElementById('summaryGoal').textContent = amount ? `${currency} ${amount}` : '-';
-        document.getElementById('summaryDeadline').textContent = deadline !== '-' ? deadline : '-';
-        document.getElementById('summaryRewards').textContent = companyName !== '-' ? 'Company Profile' : 'No Company Profile';
-        document.getElementById('summaryWallet').textContent = wallet !== '-' ? `${wallet.substring(0, 10)}...` : '-';
+        const amount = document.getElementById('targetAmount').value;
+        const currency = document.getElementById('currency').value || 'USD';
+        const minContribution = document.getElementById('minContribution').value;
+        const deadline = document.getElementById('deadline').value;
+        
+        const companyName = document.getElementById('companyName').value;
+        const companyWebsite = document.getElementById('companyWebsite').value;
+        const industry = document.getElementById('companyIndustry').value;
+        const companyLocation = document.getElementById('companyLocation').value;
+        
+        const wallet = document.getElementById('walletAddress').value;
+        const preferredToken = document.getElementById('preferredToken').value;
+        const payoutWallet = document.getElementById('payoutWallet').value;
+        
+        document.getElementById('summaryTitle').textContent = title || 'Untitled Campaign';
+        
+        updateSummaryItem('summaryTaglineItem', 'summaryTagline', tagline);
+        updateSummaryItem('summaryCategoryItem', 'summaryCategory', category);
+        updateSummaryItem('summaryLocationItem', 'summaryLocation', location);
+        updateSummaryItem('summaryDescriptionItem', 'summaryDescription', description ? description.substring(0, 100) + (description.length > 100 ? '...' : '') : '');
+        
+        document.getElementById('summaryGoal').textContent = amount ? `${currency} ${parseFloat(amount).toLocaleString()}` : 'Not set';
+        document.getElementById('summaryDeadline').textContent = deadline ? new Date(deadline).toLocaleDateString() : 'Not set';
+        updateSummaryItem('summaryMinContributionItem', 'summaryMinContribution', minContribution ? `${currency} ${parseFloat(minContribution).toLocaleString()}` : '');
+        
+        const hasCompanyInfo = companyName || companyWebsite || industry || companyLocation;
+        document.getElementById('summaryCompanySection').style.display = hasCompanyInfo ? 'block' : 'none';
+        
+        updateSummaryItem('summaryCompanyNameItem', 'summaryCompanyName', companyName);
+        updateSummaryItem('summaryCompanyWebsiteItem', 'summaryCompanyWebsite', companyWebsite);
+        updateSummaryItem('summaryIndustryItem', 'summaryIndustry', industry);
+        updateSummaryItem('summaryCompanyLocationItem', 'summaryCompanyLocation', companyLocation);
+        
+        document.getElementById('summaryWallet').textContent = wallet ? `${wallet.substring(0, 15)}...` : 'Not set';
+        updateSummaryItem('summaryPreferredTokenItem', 'summaryPreferredToken', preferredToken);
+        updateSummaryItem('summaryPayoutWalletItem', 'summaryPayoutWallet', payoutWallet ? `${payoutWallet.substring(0, 15)}...` : '');
         
         const coverContainer = document.getElementById('summaryCoverContainer');
         const coverImage = document.getElementById('summaryCoverImage');
@@ -107,9 +136,37 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             coverContainer.style.display = 'none';
         }
+        
+        const gallerySection = document.getElementById('summaryGallerySection');
+        const galleryContainer = document.getElementById('summaryGallery');
+        
+        if (galleryImages && galleryImages.length > 0) {
+            gallerySection.style.display = 'block';
+            galleryContainer.innerHTML = '';
+            
+            galleryImages.forEach((img, index) => {
+                const imgElement = document.createElement('img');
+                imgElement.src = img.src;
+                imgElement.alt = `Gallery Image ${index + 1}`;
+                imgElement.className = 'summary-gallery-thumb';
+                galleryContainer.appendChild(imgElement);
+            });
+        } else {
+            gallerySection.style.display = 'none';
+        }
     }
     
-
+    function updateSummaryItem(itemId, valueId, value) {
+        const item = document.getElementById(itemId);
+        const valueElement = document.getElementById(valueId);
+        
+        if (value && value.trim()) {
+            valueElement.textContent = value;
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    }
     
     nextBtn.addEventListener('click', () => {
         if (validateCurrentStep() && currentStep < totalSteps) {
@@ -265,10 +322,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    if (campaignForm) {
-        campaignForm.addEventListener('submit', e => {
+    if (publishBtn) {
+        publishBtn.addEventListener('click', function(e) {
             e.preventDefault();
-            console.log('Form submission triggered');
             
             const confirmCheckbox = document.getElementById('confirmInfo');
             
@@ -285,54 +341,168 @@ document.addEventListener('DOMContentLoaded', function() {
             );
             
             if (confirmPublish) {
-                showAlert('🎉 Campaign published successfully!\n\nYour campaign is now live and ready to receive backing.', 'success');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2000);
+                try {
+                    saveCampaignData();
+                    showCustomAlert('success', 'Campaign Published!', 'Your campaign is now live and ready to receive backing.', () => {
+                        window.location.href = 'Funding.html';
+                    });
+                } catch (error) {
+                    showCustomAlert('error', 'Campaign Save Error', error.message);
+                }
             }
         });
     }
     
-    // Also add direct click handler as backup
-    if (publishBtn) {
-        publishBtn.addEventListener('click', function(e) {
-            console.log('Publish button clicked');
-            // Since this is a submit button, prevent default and handle manually
-        e.preventDefault();
+    function saveCampaignData() {
+        try {
+            const campaignData = {
+                id: Date.now().toString(),
+                title: document.getElementById('campaignTitle').value || '',
+                shortTagline: document.getElementById('shortTagline').value || '',
+                category: document.getElementById('campaignCategory').value || '',
+                location: document.getElementById('location').value || '',
+                targetAmount: document.getElementById('targetAmount').value || '',
+                currency: document.getElementById('currency').value || 'USD',
+                minContribution: document.getElementById('minContribution').value || '',
+                deadline: document.getElementById('deadline').value || '',
+                description: document.getElementById('fullStory').value || '',
+                companyName: document.getElementById('companyName').value || '',
+                companyWebsite: document.getElementById('companyWebsite').value || '',
+                industry: document.getElementById('companyIndustry').value || '',
+                companyLocation: document.getElementById('companyLocation').value || '',
+                walletAddress: document.getElementById('walletAddress').value || '',
+                preferredToken: document.getElementById('preferredToken').value || '',
+                payoutWallet: document.getElementById('payoutWallet').value || '',
+                createdAt: new Date().toISOString(),
+                creator: document.getElementById('companyName').value || 'Campaign Creator',
+                raised: '0',
+                backers: '0',
+                daysLeft: calculateDaysLeft(),
+                progress: '0',
+                image: coverImageData ? coverImageData.src : 'img1.png',
+                galleryImages: galleryImages.map(img => img.src) || []
+            };
+
+            const existingCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
             
-        const confirmCheckbox = document.getElementById('confirmInfo');
+            const dataSize = JSON.stringify(campaignData).length;
+            const totalSize = JSON.stringify(existingCampaigns).length + dataSize;
             
-            if (!confirmCheckbox || !confirmCheckbox.checked) {
-                showAlert('Please confirm that all information is correct before publishing.', 'warning');
-                return;
+            if (totalSize > 4 * 1024 * 1024) {
+                existingCampaigns.splice(0, Math.max(1, existingCampaigns.length - 5));
             }
             
-            const campaignTitle = document.getElementById('campaignTitle').value || 'Your Campaign';
-            const confirmPublish = confirm(
-                `Are you sure you want to publish "${campaignTitle}"?\n\n` +
-                'Once published, your campaign will be live and visible to potential backers.\n\n' +
-                'Click OK to proceed or Cancel to review your campaign.'
-            );
+            existingCampaigns.push(campaignData);
             
-            if (confirmPublish) {
-                showAlert('🎉 Campaign published successfully!\n\nYour campaign is now live and ready to receive backing.', 'success');
-                setTimeout(() => {
-            window.location.href = 'index.html';
-                }, 2000);
+            try {
+                localStorage.setItem('userCampaigns', JSON.stringify(existingCampaigns));
+            } catch (quotaError) {
+                if (quotaError.name === 'QuotaExceededError') {
+                    throw quotaError;
+                }
             }
-        });
+            
+        } catch (error) {
+            if (error.name === 'QuotaExceededError') {
+                const campaignDataNoImages = {
+                    id: Date.now().toString(),
+                    title: document.getElementById('campaignTitle').value || '',
+                    shortTagline: document.getElementById('shortTagline').value || '',
+                    category: document.getElementById('campaignCategory').value || '',
+                    location: document.getElementById('location').value || '',
+                    targetAmount: document.getElementById('targetAmount').value || '',
+                    currency: document.getElementById('currency').value || 'USD',
+                    minContribution: document.getElementById('minContribution').value || '',
+                    deadline: document.getElementById('deadline').value || '',
+                    description: document.getElementById('fullStory').value || '',
+                    companyName: document.getElementById('companyName').value || '',
+                    companyWebsite: document.getElementById('companyWebsite').value || '',
+                    industry: document.getElementById('companyIndustry').value || '',
+                    companyLocation: document.getElementById('companyLocation').value || '',
+                    walletAddress: document.getElementById('walletAddress').value || '',
+                    preferredToken: document.getElementById('preferredToken').value || '',
+                    payoutWallet: document.getElementById('payoutWallet').value || '',
+                    createdAt: new Date().toISOString(),
+                    creator: document.getElementById('companyName').value || 'Campaign Creator',
+                    raised: '0',
+                    backers: '0',
+                    daysLeft: calculateDaysLeft(),
+                    progress: '0',
+                    image: 'img1.png',
+                    galleryImages: []
+                };
+                
+                const existingCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
+                existingCampaigns.push(campaignDataNoImages);
+                localStorage.setItem('userCampaigns', JSON.stringify(existingCampaigns));
+                showCustomAlert('warning', 'Storage Limit Reached', 'Campaign saved but images were not included to save space.');
+            } else {
+                throw error;
+            }
+        }
     }
-    
-    function showAlert(message, type = 'info') {
+
+    function calculateDaysLeft() {
+        const deadline = document.getElementById('deadline').value;
+        if (!deadline) return '30';
+        
+        const deadlineDate = new Date(deadline);
+        const today = new Date();
+        const timeDiff = deadlineDate.getTime() - today.getTime();
+        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        
+        return Math.max(0, daysDiff).toString();
+    }
+
+    function showCustomAlert(type = 'info', title = '', message = '', callback = null) {
         const alertTypes = {
-            success: { icon: '✅', color: '#338f42' },
-            warning: { icon: '⚠️', color: '#ff9500' },
-            error: { icon: '❌', color: '#ff4444' },
-            info: { icon: 'ℹ️', color: '#0066cc' }
+            success: { icon: '✅', title: title || 'Success' },
+            error: { icon: '❌', title: title || 'Error' },
+            warning: { icon: '⚠️', title: title || 'Warning' },
+            info: { icon: 'ℹ️', title: title || 'Information' }
         };
         
         const alertConfig = alertTypes[type] || alertTypes.info;
-        alert(`${alertConfig.icon} ${message}`);
+        
+        const existingAlerts = document.querySelectorAll('.custom-alert-overlay');
+        existingAlerts.forEach(alert => alert.remove());
+        
+        const overlay = document.createElement('div');
+        overlay.className = 'custom-alert-overlay';
+        
+        const alertBox = document.createElement('div');
+        alertBox.className = `custom-alert-box ${type}`;
+        
+        alertBox.innerHTML = `
+            <div class="alert-icon">${alertConfig.icon}</div>
+            <div class="alert-title">${alertConfig.title}</div>
+            <div class="alert-message">${message}</div>
+            <div class="alert-buttons">
+                <button class="alert-btn primary" id="alertOkBtn">OK</button>
+            </div>
+        `;
+        
+        overlay.appendChild(alertBox);
+        document.body.appendChild(overlay);
+        
+        const okBtn = alertBox.querySelector('#alertOkBtn');
+        okBtn.addEventListener('click', () => {
+            document.body.removeChild(overlay);
+            if (callback) callback();
+        });
+        
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) {
+                document.body.removeChild(overlay);
+                if (callback) callback();
+            }
+        });
+        
+        setTimeout(() => okBtn.focus(), 100);
+    }
+
+    function showAlert(message, type = 'warning') {
+        showCustomAlert(type, '', message);
     }
     
     updateStep();

@@ -564,6 +564,218 @@ input[name="rewardQuantity"] {
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
     color: #fff;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 60%;
+    text-align: right;
+}
+
+
+.campaign-form p,
+.summary-item,
+.summary-value,
+.form-group p,
+.reward-item p {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    hyphens: auto;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+
+.custom-alert-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 99999;
+    backdrop-filter: blur(3px);
+    animation: alertOverlayFadeIn 0.3s ease-out;
+}
+
+.custom-alert-box {
+    background: #1e1e1e;
+    border-radius: 12px;
+    padding: 30px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+    border: 2px solid;
+    animation: alertBoxSlideIn 0.3s ease-out;
+    position: relative;
+}
+
+.custom-alert-box.success {
+    border-color: #338f42;
+}
+
+.custom-alert-box.error {
+    border-color: #ff4444;
+}
+
+.custom-alert-box.warning {
+    border-color: #ff9500;
+}
+
+.custom-alert-box.info {
+    border-color: #0066cc;
+}
+
+.alert-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.alert-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #fff;
+}
+
+.alert-message {
+    color: #e0e0e0;
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    white-space: pre-line;
+}
+
+.alert-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.alert-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 100px;
+}
+
+.alert-btn.primary {
+    background: #338f42;
+    color: white;
+}
+
+.alert-btn.primary:hover {
+    background: #2d7a3a;
+    transform: translateY(-1px);
+}
+
+.alert-btn.secondary {
+    background: #444;
+    color: #e0e0e0;
+}
+
+.alert-btn.secondary:hover {
+    background: #555;
+    transform: translateY(-1px);
+}
+
+.alert-btn.danger {
+    background: #ff4444;
+    color: white;
+}
+
+.alert-btn.danger:hover {
+    background: #e63939;
+    transform: translateY(-1px);
+}
+
+
+@keyframes alertOverlayFadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes alertBoxSlideIn {
+    from {
+        transform: scale(0.8) translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1) translateY(0);
+        opacity: 1;
+    }
+}
+
+
+@media (max-width: 768px) {
+    .custom-alert-box {
+        padding: 25px;
+        margin: 20px;
+        width: calc(100% - 40px);
+    }
+    
+    .alert-icon {
+        font-size: 2.5rem;
+        margin-bottom: 12px;
+    }
+    
+    .alert-title {
+        font-size: 1.2rem;
+    }
+    
+    .alert-message {
+        font-size: 0.95rem;
+    }
+    
+    .alert-buttons {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .alert-btn {
+        width: 100%;
+        padding: 14px 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .custom-alert-box {
+        padding: 20px;
+        margin: 15px;
+        width: calc(100% - 30px);
+    }
+    
+    .alert-icon {
+        font-size: 2rem;
+        margin-bottom: 10px;
+    }
+    
+    .alert-title {
+        font-size: 1.1rem;
+        margin-bottom: 12px;
+    }
+    
+    .alert-message {
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
 }
 
 .summary-cover-container {
@@ -766,4 +978,42 @@ input[name="rewardQuantity"] {
     .reward-item {
         padding: 15px;
     }
+}
+
+
+.summary-section {
+    margin-bottom: 25px;
+    border: 1px solid #444;
+    border-radius: 8px;
+    padding: 15px;
+    background: #2a2a2a;
+}
+
+.summary-section h5 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #338f42;
+    margin: 0 0 15px 0;
+    border-bottom: 1px solid #444;
+    padding-bottom: 8px;
+}
+
+.summary-gallery {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.summary-gallery-thumb {
+    width: 60px;
+    height: 60px;
+    border-radius: 6px;
+    object-fit: cover;
+    border: 2px solid #444;
+    transition: border-color 0.3s ease;
+}
+
+.summary-gallery-thumb:hover {
+    border-color: #338f42;
 }

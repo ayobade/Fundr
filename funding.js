@@ -3,9 +3,11 @@ document.addEventListener('DOMContentLoaded', function() {
     const sortSelect = document.getElementById('sortSelect');
     const searchInput = document.getElementById('searchInput');
     const searchSubmit = document.querySelector('.search-submit');
-    const campaignCards = document.querySelectorAll('.campaign-card');
+    let campaignCards = document.querySelectorAll('.campaign-card');
+    let observer;
 
-    // Filter functionality
+    loadUserCampaigns();
+
     filterTabs.forEach(tab => {
         tab.addEventListener('click', function() {
             filterTabs.forEach(t => t.classList.remove('active'));
@@ -16,12 +18,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-    // Sort functionality
     sortSelect.addEventListener('change', function() {
         sortCampaigns(this.value);
     });
 
-    // Search functionality
     function handleSearch() {
         const searchTerm = searchInput.value.toLowerCase().trim();
         searchCampaigns(searchTerm);
@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Filter campaigns by category
     function filterCampaigns(category) {
         campaignCards.forEach(card => {
             if (category === 'all' || card.getAttribute('data-category') === category) {
@@ -53,7 +52,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Search campaigns
     function searchCampaigns(searchTerm) {
         campaignCards.forEach(card => {
             const title = card.querySelector('.campaign-title').textContent.toLowerCase();
@@ -78,7 +76,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Sort campaigns
     function sortCampaigns(sortBy) {
         const campaignsGrid = document.getElementById('campaignsGrid');
         const cardsArray = Array.from(campaignCards);
@@ -86,7 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
         cardsArray.sort((a, b) => {
             switch (sortBy) {
                 case 'newest':
-                    return 0; // Keep original order for demo
+                    return 0;
                 case 'ending-soon':
                     const daysA = parseInt(a.querySelector('.stat:last-child .stat-value').textContent);
                     const daysB = parseInt(b.querySelector('.stat:last-child .stat-value').textContent);
@@ -104,76 +101,18 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        // Clear and re-append sorted cards
         campaignsGrid.innerHTML = '';
         cardsArray.forEach(card => {
             campaignsGrid.appendChild(card);
         });
     }
 
-    // Support button functionality
-    document.querySelectorAll('.support-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const campaignCard = this.closest('.campaign-card');
-            
-            // Extract all campaign data
-            const campaignTitle = campaignCard.querySelector('.campaign-title').textContent;
-            const campaignCategory = campaignCard.getAttribute('data-category');
-            const campaignDescription = campaignCard.querySelector('.campaign-description').textContent;
-            const campaignCreator = campaignCard.querySelector('.campaign-creator').textContent;
-            const campaignImage = campaignCard.querySelector('.campaign-image img')?.src || '';
-            
-            // Extract stats
-            const stats = campaignCard.querySelectorAll('.stat-value');
-            const raisedAmount = stats[0]?.textContent || '$0';
-            const targetAmount = stats[1]?.textContent || '$100,000';
-            const daysLeft = stats[2]?.textContent || '30';
-            
-            // Extract progress
-            const progressFill = campaignCard.querySelector('.progress-fill');
-            const progressPercent = progressFill?.style.width || '0%';
-            
-            // Create campaign ID from title (in real app, this would be a proper ID)
-            const campaignId = campaignTitle.toLowerCase().replace(/[^a-z0-9]/g, '-');
-            
-            // Create URL with all campaign data
-            const params = new URLSearchParams({
-                campaign: campaignId,
-                title: campaignTitle,
-                category: campaignCategory,
-                description: campaignDescription,
-                creator: campaignCreator,
-                image: campaignImage,
-                raised: raisedAmount,
-                target: targetAmount,
-                days: daysLeft,
-                progress: progressPercent.replace('%', '')
-            });
-            
-            // Redirect to support page with campaign data
-            window.location.href = `support.html?${params.toString()}`;
-        });
-    });
-
-    // Add hover animations
-    campaignCards.forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-5px)';
-        });
-        
-        card.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
-
-    // Animate progress bars on scroll
     const observerOptions = {
         threshold: 0.5,
         rootMargin: '0px 0px -100px 0px'
     };
 
-    const observer = new IntersectionObserver((entries) => {
+    observer = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) {
                 const progressBar = entry.target.querySelector('.progress-fill');
@@ -186,7 +125,158 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }, observerOptions);
 
+    bindCampaignCardEvents();
+
     campaignCards.forEach(card => {
         observer.observe(card);
     });
+
+    function loadUserCampaigns() {
+        const userCampaigns = JSON.parse(localStorage.getItem('userCampaigns') || '[]');
+        const campaignsGrid = document.getElementById('campaignsGrid');
+        
+        if (!campaignsGrid) return;
+
+        const sortedCampaigns = userCampaigns.sort((a, b) => {
+            const dateA = new Date(a.createdAt || a.id);
+            const dateB = new Date(b.createdAt || b.id);
+            return dateB.getTime() - dateA.getTime();
+        });
+
+        sortedCampaigns.reverse().forEach(campaign => {
+            const campaignCard = createCampaignCard(campaign);
+            campaignsGrid.insertBefore(campaignCard, campaignsGrid.firstChild);
+        });
+
+        campaignCards = document.querySelectorAll('.campaign-card');
+        bindCampaignCardEvents();
+    }
+
+    function createCampaignCard(campaign) {
+        const cardDiv = document.createElement('div');
+        cardDiv.className = 'campaign-card';
+        cardDiv.setAttribute('data-category', campaign.category || 'other');
+        cardDiv.setAttribute('data-campaign', JSON.stringify(campaign));
+        
+        const targetAmount = parseFloat(campaign.targetAmount) || 0;
+        const raisedAmount = parseFloat(campaign.raised) || 0;
+        const progressPercent = targetAmount > 0 ? Math.min((raisedAmount / targetAmount) * 100, 100) : 0;
+        
+        let cardHTML = `<div class="campaign-image">`;
+        
+        if (campaign.image && campaign.image !== 'img1.png') {
+            cardHTML += `<img src="${campaign.image}" alt="${campaign.title || 'Campaign Image'}">`;
+        } else {
+            cardHTML += `<img src="img1.png" alt="Default Campaign Image">`;
+        }
+        
+        cardHTML += `</div><div class="campaign-content">`;
+        
+        if (campaign.category) {
+            cardHTML += `<div class="campaign-category">${campaign.category.charAt(0).toUpperCase() + campaign.category.slice(1)}</div>`;
+        }
+        
+        cardHTML += `<h3 class="campaign-title">${campaign.title || 'Untitled Campaign'}</h3>`;
+        
+        if (campaign.description) {
+            cardHTML += `<p class="campaign-description">${campaign.description.substring(0, 120)}${campaign.description.length > 120 ? '...' : ''}</p>`;
+        }
+        
+        const creatorName = campaign.companyName || campaign.creator || 'Anonymous Creator';
+        cardHTML += `<div class="campaign-creator">by <span>${creatorName}</span></div>`;
+        
+        if (targetAmount > 0) {
+            cardHTML += `
+                <div class="campaign-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${progressPercent}%"></div>
+                    </div>
+                </div>
+                <div class="campaign-stats">
+                    <div class="stats-grid">
+                        <div class="stat">
+                            <span class="stat-value">${campaign.currency || 'USD'} ${raisedAmount.toLocaleString()}</span>
+                            <span class="stat-label">raised</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-value">${campaign.currency || 'USD'} ${targetAmount.toLocaleString()}</span>
+                            <span class="stat-label">goal</span>
+                        </div>`;
+            
+            if (campaign.daysLeft) {
+                cardHTML += `
+                        <div class="stat">
+                            <span class="stat-value">${campaign.daysLeft}</span>
+                            <span class="stat-label">days left</span>
+                        </div>`;
+            }
+            
+            cardHTML += `    </div>
+                </div>`;
+        }
+        
+        cardHTML += `<button class="support-btn">Support This Project</button>`;
+        cardHTML += `</div>`;
+        
+        cardDiv.innerHTML = cardHTML;
+        return cardDiv;
+    }
+
+    function bindCampaignCardEvents() {
+        document.querySelectorAll('.support-btn').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const campaignCard = this.closest('.campaign-card');
+                
+                const campaignDataStr = campaignCard.getAttribute('data-campaign');
+                
+                if (campaignDataStr) {
+                    try {
+                        const campaignData = JSON.parse(campaignDataStr);
+                        
+                        const campaignId = (campaignData.title || 'untitled').toLowerCase().replace(/[^a-z0-9]/g, '-');
+                        
+                        const compactData = {
+                            ...campaignData,
+                            image: campaignData.image === 'img1.png' ? 'img1.png' : '[uploaded-image]',
+                            galleryImages: campaignData.galleryImages ? `[${campaignData.galleryImages.length} images]` : []
+                        };
+                        
+                        const params = new URLSearchParams({
+                            campaign: campaignId,
+                            data: JSON.stringify(compactData),
+                            hasImage: campaignData.image !== 'img1.png' ? 'true' : 'false',
+                            imageCount: campaignData.galleryImages ? campaignData.galleryImages.length.toString() : '0'
+                        });
+                        
+                        window.location.href = `support.html?${params.toString()}`;
+                    } catch (error) {
+                        const campaignTitle = campaignCard.querySelector('.campaign-title').textContent;
+                        const campaignId = campaignTitle.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                        window.location.href = `support.html?campaign=${campaignId}&title=${encodeURIComponent(campaignTitle)}`;
+                    }
+                } else {
+                    const campaignTitle = campaignCard.querySelector('.campaign-title').textContent;
+                    const campaignId = campaignTitle.toLowerCase().replace(/[^a-z0-9]/g, '-');
+                    window.location.href = `support.html?campaign=${campaignId}&title=${encodeURIComponent(campaignTitle)}`;
+                }
+            });
+        });
+
+        campaignCards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        if (observer) {
+            campaignCards.forEach(card => {
+                observer.observe(card);
+            });
+        }
+    }
 });
